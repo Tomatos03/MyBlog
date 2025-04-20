@@ -38,10 +38,7 @@ export default defineConfig({
             next: "下一页",
         },
 
-        socialLinks: [
-            { icon: "github", link: "https://github.com/Tomatos03" },
-            { icon: "discord", link: "https://chat.vitejs.dev/" },
-        ],
+        socialLinks: [{ icon: "github", link: "https://github.com/Tomatos03" }],
 
         footer: {
             message: "Released under the MIT License.",
