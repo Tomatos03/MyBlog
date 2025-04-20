@@ -1,7 +1,5 @@
 # Windows
 
-# Windows
-
 ## 技巧
 
 ### 启动项
