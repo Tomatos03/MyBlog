@@ -34,7 +34,6 @@ export default defineConfig({
             {
                 text: "环境配置",
                 items: [
-                    { text: "概述", link: "/env-config/" },
                     {
                         text: "开发环境",
                         items: [
@@ -51,7 +50,10 @@ export default defineConfig({
                     {
                         text: "工具",
                         items: [
-                            { text: "VS Code", link: "/env-config/tools/vscode" },
+                            {
+                                text: "VS Code",
+                                link: "/env-config/tools/vscode",
+                            },
                             { text: "Git", link: "/env-config/tools/git" },
                         ],
                     },
