@@ -12,6 +12,7 @@ export default defineConfig({
     title: "Tomatos's Blog",
     description: "Welcome",
     head: [["link", { rel: "icon", href: "/logo.png" }]],
+    lastUpdated: true,
     themeConfig: {
         // https://vitepress.dev/reference/default-theme-config
         logo: "/logo.png",
