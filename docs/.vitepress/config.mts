@@ -31,6 +31,32 @@ export default defineConfig({
                     { text: "Windows", link: "/os/windows" },
                 ],
             },
+            {
+                text: "环境配置",
+                items: [
+                    { text: "概述", link: "/env-config/" },
+                    {
+                        text: "开发环境",
+                        items: [
+                            { text: "Node.js", link: "/env-config/dev/node" },
+                        ],
+                    },
+                    {
+                        text: "部署环境",
+                        items: [
+                            { text: "MySQL", link: "/env-config/deploy/mysql" },
+                            { text: "Redis", link: "/env-config/deploy/redis" },
+                        ],
+                    },
+                    {
+                        text: "工具",
+                        items: [
+                            { text: "VS Code", link: "/env-config/tools/vscode" },
+                            { text: "Git", link: "/env-config/tools/git" },
+                        ],
+                    },
+                ],
+            },
             { text: "关于", link: "/about" },
         ],
         docFooter: {
