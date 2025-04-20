@@ -37,15 +37,23 @@ export default defineConfig({
                     {
                         text: "开发环境",
                         items: [
-                            { text: "Node.js", link: "/env-config/dev/node" },
+                            {
+                                text: "Node.js",
+                                link: "/env-config/dev/nodejs",
+                            },
+                            {
+                                text: "MySQL",
+                                link: "/env-config/dev/mysql",
+                            },
+                            {
+                                text: "Redis",
+                                link: "/env-config/dev/redis",
+                            },
                         ],
                     },
                     {
                         text: "部署环境",
-                        items: [
-                            { text: "MySQL", link: "/env-config/deploy/mysql" },
-                            { text: "Redis", link: "/env-config/deploy/redis" },
-                        ],
+                        items: [],
                     },
                     {
                         text: "工具",
@@ -61,6 +69,46 @@ export default defineConfig({
             },
             { text: "关于", link: "/about" },
         ],
+        sidebar: {
+            "/env-config/": [
+                {
+                    text: "环境配置",
+                    items: [
+                        {
+                            text: "开发环境",
+                            items: [
+                                {
+                                    text: "Node.js",
+                                    link: "/env-config/dev/nodejs",
+                                },
+                                {
+                                    text: "MySQL",
+                                    link: "/env-config/dev/mysql",
+                                },
+                                {
+                                    text: "Redis",
+                                    link: "/env-config/dev/redis",
+                                },
+                            ],
+                        },
+                        {
+                            text: "部署环境",
+                            items: [],
+                        },
+                        {
+                            text: "工具",
+                            items: [
+                                {
+                                    text: "VS Code",
+                                    link: "/env-config/tools/vscode",
+                                },
+                                { text: "Git", link: "/env-config/tools/git" },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
         docFooter: {
             prev: "上一页",
             next: "下一页",
