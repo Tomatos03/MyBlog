@@ -1,8 +1,7 @@
 import DefaultTheme from "vitepress/theme";
 import "@catppuccin/vitepress/theme/macchiato/lavender.css";
 import { watch } from "vue";
-
-// export default DefaultTheme;
+import "./style/index.css";
 
 /* .vitepress/theme/index.ts */
 // 彩虹背景动画样式
