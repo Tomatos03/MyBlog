@@ -22,7 +22,25 @@ paru -S tela-icon-theme
 
 ## shell 配置
 
-### 依赖插件
+### zsh 安装
+
+zsh 提供了强大的自动补全、主题支持和插件系统。
+
+::: code-group
+
+```paru
+paru -S zsh zsh-completions
+```
+
+:::
+
+#### 设置 zsh 为默认 shell
+
+```bash
+chsh -s /bin/zsh
+```
+
+### zsh 插件
 
 -   **[zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions)** - 根据历史记录提供命令建议
 -   **[autojump](https://github.com/wting/autojump)** - 智能目录跳转工具
@@ -35,6 +53,8 @@ paru -S zsh-autosuggestions autojump zsh-syntax-highlighting
 ```
 
 :::
+
+### zsh 配置
 
 ```bash
 # 加载插件
