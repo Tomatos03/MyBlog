@@ -24,8 +24,6 @@ paru -S tela-icon-theme
 
 ### 依赖插件
 
-为了增强 Shell 体验，我安装了以下插件：
-
 -   **[zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions)** - 根据历史记录提供命令建议
 -   **[autojump](https://github.com/wting/autojump)** - 智能目录跳转工具
 -   **[zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting)** - 命令语法高亮
