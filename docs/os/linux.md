@@ -19,3 +19,45 @@ paru -S tela-icon-theme
 :::
 
 -   **[Bibata Modern Ice](https://github.com/ful1e5/Bibata_Cursor)** - 现代简约的鼠标指针主题
+
+## shell 配置
+
+### 依赖插件
+
+为了增强 Shell 体验，我安装了以下插件：
+
+-   **[zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions)** - 根据历史记录提供命令建议
+-   **[autojump](https://github.com/wting/autojump)** - 智能目录跳转工具
+-   **[zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting)** - 命令语法高亮
+
+::: code-group
+
+```paru
+paru -S zsh-autosuggestions autojump zsh-syntax-highlighting
+```
+
+:::
+
+```bash
+# 加载插件
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /usr/share/autojump/autojump.zsh
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# 历史记录设置
+HISTFILE=~/.histfile
+HISTSIZE=1000
+SAVEHIST=1000
+
+# 常用别名
+alias ll='ls --color=auto -lah'
+
+# 键绑定
+bindkey '\eq' autosuggest-accept
+
+# 自定义提示符
+PROMPT='%F{blue}%n@%m%f %F{green}%~%f %# '
+
+# 编辑器设置
+export EDITOR='gvim'
+```
