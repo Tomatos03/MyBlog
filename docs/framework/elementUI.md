@@ -20,14 +20,14 @@ pnpm add element-ui
 
 ### 完整引入
 
-在 main.js 或 main.ts 中添加两条导入：
+(使用 create-vue 创建的项目)在 `main.js` 或 `main.ts` 中添加两个导入：
 
 ```javascript
 import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 ```
 
-然后在 Vue 实例中引入：
+然后在 Vue 中的 App 实例中引入：
 
 ```javascript
 app.use(ElementUI);
