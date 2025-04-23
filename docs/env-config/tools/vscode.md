@@ -107,11 +107,12 @@
 
 ### 功能增强类
 
-|                           插件名称                           | 功能描述                         |
-| :----------------------------------------------------------: | -------------------------------- |
-| [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) | 代码格式化工具                   |
-| [C/C++](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools) | C/C++ 语言支持、调试和代码格式化 |
+|                                                                  插件名称                                                                   | 功能描述                         |
+| :-----------------------------------------------------------------------------------------------------------------------------------------: | -------------------------------- |
+|                           [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)                            | 代码格式化工具                   |
+|                               [C/C++](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools)                               | C/C++ 语言支持、调试和代码格式化 |
 | [Competitive Programming Helper (CPH)](https://marketplace.visualstudio.com/items?itemName=DivyanshuAgrawal.competitive-programming-helper) | 拉取算法网站问题描述和测试案例   |
-| [GitHub Copilot](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot) | AI 编程助手                      |
-| [Live Preview](https://marketplace.visualstudio.com/items?itemName=ms-vscode.live-server) | 实时预览 HTML 文件               |
-| [Vim](https://marketplace.visualstudio.com/items?itemName=vscodevim.vim) | 提供 Vim 键绑定支持              |
+|                            [GitHub Copilot](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot)                             | AI 编程助手                      |
+|                          [Live Preview](https://marketplace.visualstudio.com/items?itemName=ms-vscode.live-server)                          | 实时预览 HTML 文件               |
+|                                  [Vim](https://marketplace.visualstudio.com/items?itemName=vscodevim.vim)                                   | 提供 Vim 键绑定支持              |
+|                               [CodeSnap](https://marketplace.visualstudio.com/items?itemName=adpyke.codesnap)                               | 创建美观的代码截图               |
