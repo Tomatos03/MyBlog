@@ -79,3 +79,21 @@ PROMPT='%F{blue}%n@%m%f %F{green}%~%f %# '
 # 编辑器设置
 export EDITOR='gvim'
 ```
+
+## vim 配置
+
+### vim 安装
+
+::: code-group
+
+```pacman
+sudo pacman -S vim
+```
+
+:::
+
+### 使用系统剪切板
+
+#### Wayland
+
+按照[vim-wayland-clipborad](https://github.com/jasonccox/vim-wayland-clipboard)的说明安装依赖,然后安装插件
