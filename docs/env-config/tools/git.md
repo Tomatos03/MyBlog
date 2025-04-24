@@ -137,13 +137,13 @@ git branch -d <branch-name>
 
 现在有如下需求，将分支 v4 调整到分支 v3 之后
 
-<img src="/home/Tomatos/Projects/GithubProjects/MyBlog/docs/env-config/tools/git/assets/image-20250424152608002.png" alt="image-20250424152608002"  />
+<img src="./assets/image-20250424152608002.png" alt="image-20250424152608002"  />
 
 ### # 操作步骤
 
 1. 查看分支日志，找对提交记录 v2 对应的 hash 值
 
-![image-20250424153056890](/home/Tomatos/Projects/GithubProjects/MyBlog/docs/env-config/tools/git/assets/image-20250424153056890.png)
+![image-20250424153056890](./assets/image-20250424153056890.png)
 
 2. 基于提交点 v2 创建并切换到新分支
 
