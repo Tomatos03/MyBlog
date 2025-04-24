@@ -69,6 +69,9 @@ SAVEHIST=1000
 
 # 常用别名
 alias ll='ls --color=auto -lah'
+# 使用 -E 参数确保使用sudo权限的时候仍然能够使用当前用户剪切板
+alias svim='sudo -E vim'
+
 
 # 键绑定
 bindkey '\eq' autosuggest-accept
