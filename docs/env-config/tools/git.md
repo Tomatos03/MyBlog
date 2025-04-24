@@ -10,9 +10,14 @@ git config user.email "Your Email"
 # 配置用户名
 git config user.name "Your Name"
 
+# 配置默认编辑器
+git config --global core.editor "vim"
+
+
 # 配置全局用户信息
 git config --global user.name "Your Name"
 git config --global user.email "Your Email"
+
 ```
 
 **注：**命令默认作用范围是当前仓库
