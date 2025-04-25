@@ -36,7 +36,7 @@ export default defineConfig({
                 text: "框架",
                 items: [
                     { text: "elementUI", link: "/framework/elementUI" },
-                    // { text: "Windows", link: "/framework/elementUI" },
+                    { text: "springBoot", link: "/framework/springBoot" },
                 ],
             },
             {
