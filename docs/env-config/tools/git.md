@@ -108,6 +108,30 @@ git branch -m [<old-branch-name>] <new-branch-name>
 git branch <branch-name>
 ```
 
+#### 拉取远程分支
+
+```git
+git fetch origin <branch-name>
+```
+
+#### 合并分支
+
+```git
+git merge <branch-name>
+```
+
+#### 拉取并合并分支
+
+```git
+# 拉取远程分支合并到当前分支
+# 没有追踪远程仓库
+git pull <remote-repo-name> <branch-name>
+
+# 有追踪远程仓库
+git pull
+
+```
+
 #### 切换分支
 
 ```git
@@ -129,6 +153,31 @@ git switch -c <branch-name>
 ```git
 # 删除分支
 git branch -d <branch-name>
+```
+
+#### 变基
+
+变基操作会将当前分支的提交记录移动到指定分支的最新提交之后
+
+```git
+# 1. 开发前先同步主分支
+git checkout main
+git pull origin main
+
+# 2. 变基当前分支
+git checkout feature
+git rebase main
+
+# 变基前
+A --- B --- C (main)
+         \
+          D --- E (feature)
+
+# 变基后
+A --- B --- C (main)
+             \
+              D' --- E' (feature)
+
 ```
 
 ## 个人开发
