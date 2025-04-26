@@ -3,6 +3,8 @@
 ## 优点
 
 -   不需要知道参数顺序, 参数设置顺序可以任意组合
+-   可读性高, 代码清晰
+-   可扩展性强, 可以添加新的参数
 
 ## 实现
 
@@ -46,4 +48,14 @@ public class User {
     }
 }
 
+```
+
+### 调用
+
+```java
+    User user = User.builder()
+            .setName("John")
+            .setAge(30)
+            .setAddress("123 Main St")
+            .build();
 ```
