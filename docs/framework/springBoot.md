@@ -17,15 +17,13 @@
 
 ### Mybatis
 
-````xml
+```xml
 <dependency>
 	<groupId>org.mybatis.spring.boot</groupId>
 	<artifactId>mybatis-spring-boot-starter</artifactId>
 	<version>[last-version]</version>
 </dependency>
 ```
-
-
 
 ## 配置
 
@@ -39,7 +37,7 @@
 	<artifactId>mysql-connector-java</artifactId>
 	<!--如果使用springboot-start-parent，可以省略版本号，使用父pom指定的版本-->
 	<version>8.0.33</version>
-````
+```
 
 ```yaml
 spring:
