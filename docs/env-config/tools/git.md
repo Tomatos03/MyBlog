@@ -45,6 +45,43 @@ git config --global --get user.email
 
 ## 基础操作
 
+### 本地仓库
+
+代码需要提交到暂存区才能提交到本地仓库
+
+#### 初始化本地仓库
+
+```git
+git init
+```
+
+#### 添加文件到暂存区
+
+```git
+# 提交单个文件
+git add <file-name>
+
+# 提交所有文件
+git add .
+
+# 提交指定目录下的所有文件
+git add <dir-name>
+```
+
+#### 暂存区的变动提交到本地仓库
+
+```git
+# 提交代码到暂存区, 并使用指定的默认编辑器编写提交信息
+# 无提交信息视为取消本次提交
+git commit
+
+# 添加参数m显示指定提交信息
+git commit -m "commit message"
+
+# 修改最近一次提交信息
+git commit --amend -m "new commit message"
+```
+
 ### 远程仓库
 
 #### 克隆远程仓库
