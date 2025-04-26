@@ -34,8 +34,10 @@ export default defineConfig({
             },
             {
                 text: "设计模式",
-                items: [{ text: "builder模式", link: "/design-pattern/builder" }],
-            }
+                items: [
+                    { text: "builder模式", link: "/design-pattern/builder" },
+                ],
+            },
             {
                 text: "协议",
                 items: [{ text: "HTTP", link: "/protocol/http" }],
