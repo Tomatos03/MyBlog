@@ -33,6 +33,10 @@ export default defineConfig({
                 ],
             },
             {
+                text: "协议",
+                items: [{ text: "HTTP", link: "/protocol/http" }],
+            },
+            {
                 text: "框架",
                 items: [
                     { text: "elementUI", link: "/framework/elementUI" },
