@@ -1,0 +1,25 @@
+{
+    "fileOrDirNameMap": {
+        "about": "关于",
+        "os": "操作系统",
+        "env-config": "环境配置",
+        "design-pattern": "设计模式",
+        "framework": "框架",
+        "protocol": "协议",
+        "tools": "工具",
+        "dev": "开发环境",
+        "deploy": "部署环境"
+    },
+    "order": [
+        "os",
+        "design-pattern",
+        "framework",
+        "protocol",
+        "dev",
+        {
+            "name": "env-config",
+            "order": ["tools", "dev", "deploy"]
+        },
+        "about"
+    ]
+}

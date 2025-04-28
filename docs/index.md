@@ -3,13 +3,13 @@
 layout: home
 
 hero:
-    name: "Tomatos 的博客"
-    text: "Welcome"
-    tagline: "这是一个个人博客"
+    name: 'Tomatos 的博客'
+    text: 'Welcome'
+    tagline: '这是一个个人博客'
     actions:
         - theme: brand
           text: 开始
-          link: /os/linux
+          link: /nav/os/linux
         - theme: alt
           text: GitHub
           link: https://github.com/Tomatos03
