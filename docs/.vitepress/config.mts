@@ -35,15 +35,15 @@ export default defineConfig({
         //                     items: [
         //                         {
         //                             text: 'Node.js',
-        //                             link: '/env-config/dev/nodejs',
+        //                             link: '/nav/env-config/dev/nodejs',
         //                         },
         //                         {
         //                             text: 'MySQL',
-        //                             link: '/env-config/dev/mysql',
+        //                             link: '/nav/env-config/dev/mysql',
         //                         },
         //                         {
         //                             text: 'Redis',
-        //                             link: '/env-config/dev/redis',
+        //                             link: '/nav/env-config/dev/redis',
         //                         },
         //                     ],
         //                 },
@@ -56,9 +56,9 @@ export default defineConfig({
         //                     items: [
         //                         {
         //                             text: 'VS Code',
-        //                             link: '/env-config/tools/vscode',
+        //                             link: '/nav/env-config/tools/vscode',
         //                         },
-        //                         { text: 'Git', link: '/env-config/tools/git' },
+        //                         { text: 'Git', link: '/nav/env-config/tools/git' },
         //                     ],
         //                 },
         //             ],
