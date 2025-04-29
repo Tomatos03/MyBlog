@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { fileOrDirNameMap, order } from '../../nav/meta.json';
+import { fileOrDirNameMap, order, excludeFiles } from '../../nav/meta.json';
 
 interface NavItem0 {
     text: string;
@@ -22,6 +22,10 @@ function generateNavItem(directoryPath: string): NavItem[] {
     filesAndDirs.forEach((fileOrDir: string) => {
         const fullPath: string = path.join(directoryPath, fileOrDir);
         const stat: Stats = fs.statSync(fullPath);
+
+        if (excludeFiles.includes(fileOrDir)) {
+            return;
+        }
 
         if (stat.isFile() && fileOrDir.endsWith('.md')) {
             navItems.push({
