@@ -76,14 +76,14 @@ function isNavitem1(item: NavItem): boolean {
     return 'items' in item;
 }
 
-function sortNavItems(navItems: NavItem[], orderArr: OrderArray): void {
+function sortNavItemsByFileName(navItems: NavItem[], orderArr: OrderArray): void {
     navItems.sort((a: NavItem, b: NavItem) => {
         return getOrder(a.text, orderArr) - getOrder(b.text, orderArr);
     });
     for (let navItem of navItems) {
         if (isNavitem1(navItem)) {
             navItem = navItem as NavItem1;
-            sortNavItems(navItem.items, orderArr);
+            sortNavItemsByFileName(navItem.items, orderArr);
         }
     }
 }
@@ -93,7 +93,7 @@ export default function autoGenerateNavItems(navDirectoryPath: string): NavItem[
 
     const navItems: NavItem[] = generateNavItem(targetDirectory);
 
-    sortNavItems(navItems, order); // Sort the nav items
+    sortNavItemsByFileName(navItems, order); // Sort the nav items
 
     mapFileOrDirName(navItems); // Map file or dir names to their corresponding values
     return navItems;
