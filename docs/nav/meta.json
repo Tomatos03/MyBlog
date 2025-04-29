@@ -20,7 +20,7 @@
             "name": "env-config",
             "order": ["tools", "dev", "deploy"]
         },
-        "about"
+        "web"
     ],
     "excludeFiles": ["assets"]
 }
