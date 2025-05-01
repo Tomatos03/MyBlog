@@ -100,3 +100,41 @@ sudo pacman -S vim
 #### Wayland
 
 按照[vim-wayland-clipborad](https://github.com/jasonccox/vim-wayland-clipboard)的说明安装依赖,然后安装插件
+
+## 按键映射
+
+wayland 下修改原有键盘按键映射能够使用 keyd
+
+### keyd 安装
+
+::: code-group
+
+```paru
+paru -S keyd
+```
+
+:::
+
+安装完成之后，使用 `sudo systemctl enable keyd --now` 命令设置自动启动
+
+### keyd 配置
+
+keyd 的配置文件位于 `/etc/keyd/keyd.conf`，可以直接使用如下配置:
+
+```bash
+[ids]
+
+*
+
+[main]
+
+# 直接按下为ese，长按为control
+capslock = overload(control, esc)
+
+# 配置组合键
+[control]
+j = down #  control + j
+k = up # control + k
+```
+
+**注：**更详细的配置可以参考项目说明[keyd](https://github.com/rvaiya/keyd)
