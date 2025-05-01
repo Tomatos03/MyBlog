@@ -45,6 +45,58 @@ git config --global --get user.email
 
 ## 基础操作
 
+### 重置
+
+当需要撤销修改或者切换到特定版本时，可以使用 Git 的重置功能。
+
+#### 撤销工作区修改
+
+丢弃工作目录中的文件的修改 （恢复到最后一次提交的状态）
+
+```git
+# 撤销单个文件的修改
+git checkout -- <file-name>
+
+# git 2.23+ 新命令
+git restore <file-name>
+```
+
+#### 撤销暂存区的文件
+
+不会丢失更改，只是撤销暂存状态
+
+```git
+# 将暂存区的修改撤销到工作区
+git reset HEAD <file-name>
+
+# git 2.23+ 新命令
+git restore --staged <file-name>
+```
+
+#### 重置提交
+
+```git
+# 软重置 - 保留工作区和暂存区的更改
+git reset --soft <commit-hash>
+
+# 混合重置 - 保留工作区更改，但清除暂存区 (默认模式)
+git reset <commit-hash>
+git reset --mixed <commit-hash>
+
+# 硬重置 - 丢弃所有更改，完全回到指定提交
+git reset --hard <commit-hash>
+```
+
+#### 重置到前 N 个版本
+
+```git
+# 回退到前一个版本
+git reset --hard HEAD^
+
+# 回退到前N个版本
+git reset --hard HEAD~N
+```
+
 ### 本地仓库
 
 代码需要提交到暂存区才能提交到本地仓库
@@ -141,6 +193,15 @@ git log --oneline
 
 # 查看简洁的提交日志，包含分支信息
 git log --oneline --graph
+```
+
+#### 查看操作日志
+
+```git
+git reflog
+
+# 查看简洁的操作日志
+git reflog --oneline
 ```
 
 ### 分支
