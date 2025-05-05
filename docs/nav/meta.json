@@ -8,7 +8,9 @@
         "protocol": "协议",
         "tools": "工具",
         "dev": "开发环境",
-        "deploy": "部署环境"
+        "deploy": "部署环境",
+        "languages": "编程语言",
+        "term": "术语"
     },
     "order": [
         "os",
