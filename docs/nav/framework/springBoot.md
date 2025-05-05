@@ -6,11 +6,12 @@
 
 ```xml
 <!-- 指定父pom, 父pom包含一些springboot当前兼容的常用依赖 -->
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.4.5</version>
-	</parent>
+<parent>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-parent</artifactId>
+	<version>3.4.5</version>
+	<relativePath/> <!-- 优先从远程仓库开始查找 -->
+</parent>
 ```
 
 ## 整合
@@ -23,6 +24,24 @@
 	<artifactId>mybatis-spring-boot-starter</artifactId>
 	<version>[last-version]</version>
 </dependency>
+```
+
+### Spring Security
+
+```xml
+<!--如果使用springboot提供了parent，可以不指定版本号，而是由父项目之中提供的版本-->
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+		<version>[last-version]</version>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-security</artifactId>
+		<version>[last-version]</version>
+    </dependency>
+</dependencies>
 ```
 
 ## 配置
@@ -42,8 +61,8 @@
 ```yaml
 spring:
   datasource:
-	url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
-	username: root
-	password: 123456
-	driver-class-name: com.mysql.cj.jdbc.Driver
+	url: jdbc:mysql://<hostname>[:<port>]/<database>[?<param1>[&<param2>...]]
+	username: <username>
+	password: <password>
+	driver-class-name: <full-qualified-class-name>
 ```
