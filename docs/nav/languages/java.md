@@ -88,6 +88,8 @@ String dbUrl = props.getProperty("db.url");
 
 ```java
 Properties properties = new Properties();
+// 如果文件不存在，则创建一个新的文件
+// 如果文件存在，原有的内容会先被清空
 String path = "src/main/resources/application.properties";
 try (FileOutputStream f_out = new FileOutputStream(path)){
     properties.setProperty("id", "test");
