@@ -31,4 +31,55 @@ Java 编译器在编译泛型代码时，会移除所有泛型类型参数 ，�
 
 这些实现方式保证了 Java 泛型的向后兼容性，但也带来了类型信息在运行时不可用等局限性。
 
-**注：**对于不同泛型参数的类得到的 class 对象相同
+**注：java**对于不同泛型参数的类得到的 class 对象相同
+
+## 常用类
+
+### Properties
+
+Properties 继承自 Hashtable，专门用于处理`.properties`配置文件。
+
+#### 核心方法
+
+-   `setProperty(String key, String value)` - 设置属性值
+-   `getProperty(String key)` - 获取属性值
+-   `getProperty(String key, String defaultValue)` - 获取属性值，若不存在则返回默认值
+-   `load(InputStream/Reader)` - 从输入流加载属性
+-   `store(OutputStream/Writer, String comments)` - 将当前 Properties 对象存储的 key-value 属性存储到输出流指定文件中
+
+#### 示例
+
+```properties
+# config.properties
+db.url=jdbc:mysql://localhost:3306/test
+db.user=root
+db.password=password
+db.driver=com.mysql.jdbc.Driver
+app.name=MyApplication
+app.version=1.0.0
+```
+
+```java
+// 创建Properties对象
+Properties props = new Properties();
+
+// 配置文件路径
+String configFilePath = "src/main/resources/kaptcha.properties";
+
+try (FileInputStream in = new FileInputStream(configFilePath)) {
+    // 从文件加载配置到Properties对象
+    // 加载到Properties对象中的值:
+    //  db.user <-> root
+    //  db.password <-> password
+    props.load(in);
+} catch (IOException e) {
+    // 如果文件读取失败，抛出运行时异常
+    throw new RuntimeException(e);
+}
+
+// 获取数据库URL配置
+String dbUrl = props.getProperty("db.url");
+
+// 修改应用名称配置
+props.setProperty("app.name", "NewApplication");
+```
