@@ -59,18 +59,20 @@ app.name=MyApplication
 app.version=1.0.0
 ```
 
-```java
-// 创建Properties对象
-Properties props = new Properties();
+##### 读取配置文件
 
+```java
+Properties props = new Properties();
 // 配置文件路径
 String configFilePath = "src/main/resources/kaptcha.properties";
 
 try (FileInputStream in = new FileInputStream(configFilePath)) {
-    // 从文件加载配置到Properties对象
-    // 加载到Properties对象中的值:
-    //  db.user <-> root
-    //  db.password <-> password
+    /*
+     * 从文件加载配置到Properties对象
+     * 加载到Properties对象中的值:
+     *   db.user <-> root
+     *   db.password <-> password
+     */
     props.load(in);
 } catch (IOException e) {
     // 如果文件读取失败，抛出运行时异常
@@ -79,7 +81,28 @@ try (FileInputStream in = new FileInputStream(configFilePath)) {
 
 // 获取数据库URL配置
 String dbUrl = props.getProperty("db.url");
+// ...
+```
 
-// 修改应用名称配置
-props.setProperty("app.name", "NewApplication");
+##### 持久化配置
+
+```java
+Properties properties = new Properties();
+String path = "src/main/resources/application.properties";
+try (FileOutputStream f_out = new FileOutputStream(path)){
+    properties.setProperty("id", "test");
+    properties.setProperty("name", "tom");
+    properties.store(f_out, "comments");
+} catch (IOException e) {
+    e.printStackTrace();
+}
+```
+
+向属性文件中写入配置后，生成的 application.properties 文件内容如下:
+
+```properties
+#comments
+#Tue Aug 29 10:15:30 CST 2023
+id=test
+name=tom
 ```
