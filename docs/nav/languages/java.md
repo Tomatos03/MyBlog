@@ -33,7 +33,7 @@ Java 编译器在编译泛型代码时，会移除所有泛型类型参数 ，�
 
 **注：java**对于不同泛型参数的类得到的 class 对象相同
 
-## 常用类
+## 常用类或接口
 
 ### Properties
 
@@ -108,3 +108,152 @@ try (FileOutputStream f_out = new FileOutputStream(path)){
 id=test
 name=tom
 ```
+
+## Session 接口
+
+Session（会话）是在客户端和服务器之间建立的一种状态机制，用于在多个请求之间保持用户状态信息。
+
+### HttpSession 接口
+
+在 Java Web 开发中，`javax.servlet.http.HttpSession`接口是处理会话管理的核心 API。
+
+#### 生命周期
+
+-   **创建**：首次调用`request.getSession()`或`request.getSession(true)`
+-   **销毁**：超时（默认 30 分钟）、调用`session.invalidate()`、服务器关闭
+
+#### 核心方法
+
+-   `String getId()` - 获取会话的唯一标识符
+-   `void setAttribute(String name, Object value)` - 存储会话数据
+-   `Object getAttribute(String name)` - 获取会话数据
+-   `void removeAttribute(String name)` - 移除会话数据
+-   `void invalidate()` - 使会话失效
+-   `void setMaxInactiveInterval(int interval)` - 设置会话超时时间(秒)
+
+#### 示例代码
+
+```java
+// 获取会话对象(若不存在则创建)
+HttpSession session = request.getSession();
+
+// 存储数据
+session.setAttribute("username", "admin");
+session.setAttribute("loginTime", System.currentTimeMillis());
+
+// 设置超时时间(1小时)
+session.setMaxInactiveInterval(3600);
+
+// 读取数据
+String username = (String) session.getAttribute("username");
+Long loginTime = (Long) session.getAttribute("loginTime");
+
+// 移除数据
+session.removeAttribute("loginTime");
+
+// 销毁会话
+session.invalidate();
+```
+
+### 会话跟踪机制
+
+Session 通常基于 Cookie 实现，服务器会向客户端发送包含会话 ID(JSESSIONID)的 Cookie。也可以通过 URL 重写(如`url;jsessionid=abc123`)实现无 Cookie 环境下的会话跟踪。
+
+### 安全考虑
+
+-   避免在 Session 中存储敏感信息
+-   设置合理的超时时间
+-   防止会话固定攻击
+-   使用 HTTPS 保护会话 Cookie
+-   登出时显式调用`invalidate()`
+
+## Cookie
+
+Cookie 是存储在客户端浏览器中的小型文本数据，用于在 HTTP 请求之间保持状态信息。
+
+### javax.servlet.http.Cookie 类
+
+在 Java Web 开发中，`javax.servlet.http.Cookie` 类用于创建和管理 Cookie。
+
+#### 主要特性
+
+-   **大小限制**：单个 Cookie 通常限制为 4KB
+-   **数量限制**：每个域名下通常限制为 20-50 个
+-   **存储位置**：客户端浏览器
+-   **生命周期**：可以是会话级或持久性的
+
+#### 核心方法
+
+-   `Cookie(String name, String value)` - 创建 Cookie
+-   `void setMaxAge(int expiry)` - 设置 Cookie 过期时间(秒)
+-   `void setValue(String value)` - 设置 Cookie 的值
+-   `void setPath(String path)` - 设置 Cookie 的路径
+-   `void setDomain(String domain)` - 设置 Cookie 的域
+-   `void setSecure(boolean flag)` - 设置是否仅通过 HTTPS 传输
+-   `void setHttpOnly(boolean httpOnly)` - 设置是否允许 JavaScript 访问
+-   `String getName()` - 获取 Cookie 的名称
+-   `String getValue()` - 获取 Cookie 的值
+
+#### 示例代码
+
+##### 创建和发送 Cookie
+
+```java
+// 创建新的 Cookie
+Cookie userCookie = new Cookie("username", "john_doe");
+
+// 设置 Cookie 的过期时间(7天)
+// 单位：秒
+userCookie.setMaxAge(7 * 24 * 60 * 60);
+
+// 设置 Cookie 的路径
+// 当前路径以及子路径发送请求的时候都会携带这个cookie
+userCookie.setPath("/");
+
+// 设置为 HttpOnly，防止 JavaScript 访问
+userCookie.setHttpOnly(true);
+
+// 设置为安全 Cookie，仅通过 HTTPS 发送
+userCookie.setSecure(true);
+
+// 将 Cookie 添加到响应
+response.addCookie(userCookie);
+```
+
+##### 读取 Cookie
+
+```java
+// 获取请求中的所有 Cookie
+Cookie[] cookies = request.getCookies();
+
+if (cookies != null) {
+    for (Cookie cookie : cookies) {
+        if ("username".equals(cookie.getName())) {
+            String username = cookie.getValue();
+            System.out.println("欢迎回来, " + username);
+            break;
+        }
+    }
+}
+```
+
+##### 删除 Cookie
+
+```java
+// 创建同名 Cookie 并设置最大年龄为0
+Cookie cookie = new Cookie("username", null);
+cookie.setMaxAge(0);
+cookie.setPath("/");
+response.addCookie(cookie);
+```
+
+### Cookie 与 Session 对比
+
+| 特性     | Cookie                           | Session                        |
+| -------- | -------------------------------- | ------------------------------ |
+| 存储位置 | 客户端浏览器                     | 服务器内存                     |
+| 安全性   | 较低，可被客户端查看和修改       | 较高，存储在服务器             |
+| 生命周期 | 可持久化存储                     | 默认为会话级，可配置超时时间   |
+| 存储容量 | 有限(通常 4KB)                   | 较大(受服务器内存限制)         |
+| 性能     | 每次请求都会传输                 | 只传输会话标识符               |
+| 适用场景 | 记住用户名、主题偏好等非敏感信息 | 用户认证状态、购物车等敏感数据 |
