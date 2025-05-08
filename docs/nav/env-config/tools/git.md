@@ -151,6 +151,8 @@ git commit
 git commit -m "commit message"
 
 # 修改最近一次提交信息
+# 或
+# 将暂存区的所有变动合并到最新提交
 git commit --amend -m "new commit message"
 ```
 
