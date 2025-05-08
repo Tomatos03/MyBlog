@@ -197,6 +197,15 @@ git log --oneline
 git log --oneline --graph
 ```
 
+#### 远程和本地日志差异
+
+```git
+# 查看本地和远程分支的差异
+git log <remote-repo-name>/<branch-name>..<branch-name>
+# 示例
+git log origin/main..main
+```
+
 #### 查看操作日志
 
 ```git
@@ -230,8 +239,13 @@ git branch <branch-name>
 
 #### 拉取远程分支
 
+> [!NOTE]
+> 从远程仓库拉取的内容不会影响当前暂存区和工作区, 在 merge 操作之后才会影响
+
 ```git
-git fetch origin <branch-name>
+git fetch <remote-repo-name> <branch-name>
+# 示例
+git fetch origin main
 ```
 
 #### 合并分支
@@ -250,6 +264,19 @@ git pull <remote-repo-name> <branch-name>
 # 有追踪远程仓库
 git pull
 
+```
+
+#### 拉取时指定策略
+
+```git
+# 使用rebase策略
+git pull --rebase
+
+# 使用merge策略(默认)
+git pull --no-rebase
+
+# 只允许快进合并，如有冲突则失败
+git pull --ff-only
 ```
 
 #### 切换分支
