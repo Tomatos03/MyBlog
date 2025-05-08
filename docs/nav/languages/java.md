@@ -109,20 +109,21 @@ id=test
 name=tom
 ```
 
-## Session 接口
+## HttpSession 接口
 
-Session（会话）是在客户端和服务器之间建立的一种状态机制，用于在多个请求之间保持用户状态信息。
+Session（会话）是在客户端和服务器之间建立的一种状态机制，用于在多个请求之间保持用户状态信息。 在 Java Web 开发中，`HttpSession`接口是处理会话管理的核心 API，根据不同的 Java 版本有不同的包路径：
 
-### HttpSession 接口
+-   Jakarta EE (Java EE 9+): `jakarta.servlet.http.HttpSession`
+-   Java EE 8 及更早版本: `javax.servlet.http.HttpSession`
 
-在 Java Web 开发中，`javax.servlet.http.HttpSession`接口是处理会话管理的核心 API。
+这个接口提供了在多个页面请求或访问之间存储和检索用户信息的机制。
 
-#### 生命周期
+### 生命周期
 
 -   **创建**：首次调用`request.getSession()`或`request.getSession(true)`
 -   **销毁**：超时（默认 30 分钟）、调用`session.invalidate()`、服务器关闭
 
-#### 核心方法
+### 核心方法
 
 -   `String getId()` - 获取会话的唯一标识符
 -   `void setAttribute(String name, Object value)` - 存储会话数据
@@ -131,7 +132,7 @@ Session（会话）是在客户端和服务器之间建立的一种状态机制�
 -   `void invalidate()` - 使会话失效
 -   `void setMaxInactiveInterval(int interval)` - 设置会话超时时间(秒)
 
-#### 示例代码
+### 示例代码
 
 ```java
 // 获取会话对象(若不存在则创建)
@@ -155,25 +156,9 @@ session.removeAttribute("loginTime");
 session.invalidate();
 ```
 
-### 会话跟踪机制
-
-Session 通常基于 Cookie 实现，服务器会向客户端发送包含会话 ID(JSESSIONID)的 Cookie。也可以通过 URL 重写(如`url;jsessionid=abc123`)实现无 Cookie 环境下的会话跟踪。
-
-### 安全考虑
-
--   避免在 Session 中存储敏感信息
--   设置合理的超时时间
--   防止会话固定攻击
--   使用 HTTPS 保护会话 Cookie
--   登出时显式调用`invalidate()`
-
 ## Cookie
 
-Cookie 是存储在客户端浏览器中的小型文本数据，用于在 HTTP 请求之间保持状态信息。
-
-### javax.servlet.http.Cookie 类
-
-在 Java Web 开发中，`javax.servlet.http.Cookie` 类用于创建和管理 Cookie。
+Cookie 是存储在客户端浏览器中的小型文本数据，用于在 HTTP 请求之间保持状态信息。在 Java Web 开发中，`javax.servlet.http.Cookie` 类用于创建和管理 Cookie。
 
 #### 主要特性
 
