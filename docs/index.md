@@ -9,7 +9,7 @@ hero:
     actions:
         - theme: brand
           text: 开始
-          link: /nav/os/linux
+          link: /nav/os/Linux
         - theme: alt
           text: GitHub
           link: https://github.com/Tomatos03
