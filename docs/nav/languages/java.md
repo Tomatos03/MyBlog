@@ -47,8 +47,6 @@ Properties 继承自 Hashtable，专门用于处理`.properties`配置文件。
 -   `load(InputStream/Reader)` - 从输入流加载属性
 -   `store(OutputStream/Writer, String comments)` - 将当前 Properties 对象存储的 key-value 属性存储到输出流指定文件中
 
-#### 示例
-
 ```properties
 # config.properties
 db.url=jdbc:mysql://localhost:3306/test
@@ -59,7 +57,7 @@ app.name=MyApplication
 app.version=1.0.0
 ```
 
-##### 读取配置文件
+#### 读取配置文件
 
 ```java
 Properties props = new Properties();
@@ -84,7 +82,7 @@ String dbUrl = props.getProperty("db.url");
 // ...
 ```
 
-##### 持久化配置
+#### 持久化配置
 
 ```java
 Properties properties = new Properties();
@@ -132,7 +130,7 @@ Session（会话）是在客户端和服务器之间建立的一种状态机制�
 -   `void invalidate()` - 使会话失效
 -   `void setMaxInactiveInterval(int interval)` - 设置会话超时时间(秒)
 
-### 示例代码
+### 创建和使用 Session
 
 ```java
 // 获取会话对象(若不存在则创建)
@@ -179,9 +177,7 @@ Cookie 是存储在客户端浏览器中的小型文本数据，用于在 HTTP �
 -   `String getName()` - 获取 Cookie 的名称
 -   `String getValue()` - 获取 Cookie 的值
 
-#### 示例代码
-
-##### 创建和发送 Cookie
+#### 创建和发送 Cookie
 
 ```java
 // 创建新的 Cookie
@@ -205,7 +201,7 @@ userCookie.setSecure(true);
 response.addCookie(userCookie);
 ```
 
-##### 读取 Cookie
+#### 读取 Cookie
 
 ```java
 // 获取请求中的所有 Cookie
@@ -222,7 +218,7 @@ if (cookies != null) {
 }
 ```
 
-##### 删除 Cookie
+#### 删除 Cookie
 
 ```java
 // 创建同名 Cookie 并设置最大年龄为0
