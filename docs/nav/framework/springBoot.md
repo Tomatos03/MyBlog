@@ -58,9 +58,7 @@
 </dependency>
 ```
 
-##### 示例
-
-###### 定义配置
+##### 定义配置
 
 ```java
 @Component
@@ -83,7 +81,7 @@ public class CodeConfig {
 
 ```
 
-###### 定义 Controller
+##### 定义 Controller
 
 ```java
 @RestController // 标记该类为RESTful控制器，处理HTTP请求
