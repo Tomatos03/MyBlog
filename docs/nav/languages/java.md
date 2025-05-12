@@ -72,6 +72,92 @@ Java 提供了多种修饰符，用于控制类、方法、变量等的访问权
 -   **`transient`**：变量不会被序列化。
 -   **`volatile`**：变量在多线程环境下保持可见性。
 
+## Java 类加载顺序
+
+在 Java 中，类的加载顺序是由 JVM 在运行时动态决定的。类加载的顺序直接影响类的初始化和静态块的执行顺序。
+
+### 加载顺序
+
+以下是类加载的顺序，使用箭头图示说明：
+
+```plaintext
+父类静态代码块和静态变量
+    ↓
+子类静态代码块和静态变量
+    ↓
+父类实例变量和初始化块
+    ↓
+父类构造方法
+    ↓
+子类实例变量和初始化块
+    ↓
+子类构造方法
+```
+
+```java
+class Parent {
+     static {
+          System.out.println("父类静态代码块");
+     }
+
+     {
+          System.out.println("父类实例初始化块");
+     }
+
+     public Parent() {
+          System.out.println("父类构造方法");
+     }
+}
+
+class Child extends Parent {
+     static {
+          System.out.println("子类静态代码块");
+     }
+
+     {
+          System.out.println("子类实例初始化块");
+     }
+
+     public Child() {
+          System.out.println("子类构造方法");
+     }
+}
+
+public class Main {
+     public static void main(String[] args) {
+          System.out.println("创建第一个子类对象：");
+          new Child();
+
+          System.out.println("\n创建第二个子类对象：");
+          new Child();
+     }
+}
+```
+
+输出结果:
+
+```text
+    父类静态代码块
+    子类静态代码块
+
+    创建第一个子类对象时：
+
+    父类实例初始化块
+    父类构造方法
+    子类实例初始化块
+    子类构造方法
+
+    创建第二个子类对象时：
+
+    父类实例初始化块
+    父类构造方法
+    子类实例初始化块
+    子类构造方法
+```
+
+> [!TIP]
+> 静态代码块的执行顺序与类的加载顺序一致，而实例初始化块和构造方法的执行顺序与对象的创建顺序一致。
+
 ## Java 泛型
 
 Java 泛型（Generics）是 Java 5 引入的一种特性，用于在编译时提供类型检查和消除类型转换的需要。它允许类、接口和方法操作指定类型的对象。
