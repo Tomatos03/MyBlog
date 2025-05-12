@@ -1,6 +1,107 @@
 # JAVA
 
-## 动态绑定与静态绑定对比
+## 基本数据类型
+
+| 数据类型 | 最小值                  | 最大值                 | 占用字节数 |
+| -------- | ----------------------- | ---------------------- | ---------- |
+| byte     | -2<sup>7</sup>          | 2<sup>7</sup> - 1      | 1          |
+| short    | -2<sup>15</sup>         | 2<sup>15</sup> - 1     | 2          |
+| int      | -2<sup>31</sup>         | 2<sup>31</sup> - 1     | 4          |
+| long     | -2<sup>63</sup>         | 2<sup>63</sup> - 1     | 8          |
+| float    | -3.4 × 10<sup>38</sup>  | 3.4 × 10<sup>38</sup>  | 4          |
+| double   | -1.7 × 10<sup>308</sup> | 1.7 × 10<sup>308</sup> | 8          |
+| char     | 0                       | 2<sup>16</sup> - 1     | 2          |
+| boolean  | false                   | true                   | 1 (理论上) |
+
+## 变量初始值
+
+> [!NOTE]
+> 只有类的成员变量（字段）才会有默认初始值。局部变量不会被自动初始化，必须显式赋值后才能使用。
+
+| 数据类型 | 默认值   |
+| -------- | -------- |
+| byte     | 0        |
+| short    | 0        |
+| int      | 0        |
+| long     | 0L       |
+| float    | 0.0f     |
+| double   | 0.0d     |
+| char     | '\u0000' |
+| boolean  | false    |
+| 引用类型 | null     |
+
+## Java 接口
+
+### 成员变量
+
+接口中的字段默认是 `public static final`，即常量，不能被修改。
+
+> [!NOTE]
+> 由于成员变量默认是常量，所以在接口中定义的变量必须初始化。
+
+```java
+public interface Example {
+    // 下面两种写法是等价的
+    int VALUE = 10;
+    public static final int VALUE2 = 20;
+}
+```
+
+### 成员方法
+
+接口中的方法默认是 `public abstract`，即抽象方法。
+
+-   Java 8 之前，接口方法只能是 `public abstract`。
+-   Java 8 引入了默认方法（`default`）和静态方法（`static`）。
+-   Java 9 开始支持私有方法（`private`），用于辅助默认方法或静态方法。
+
+> [!NOTE]
+> 接口中的方法不能有方法体，除非是默认方法或静态方法。其中默认方法还可以被实现类重写。
+
+### 多继承冲突
+
+如果一个类实现了多个接口，且这些接口中有相同签名的默认方法，必须在实现类中重写该方法以解决冲突。
+
+```java
+public interface A {
+    default void method() {
+        System.out.println("A");
+    }
+}
+
+public interface B {
+    default void method() {
+        System.out.println("B");
+    }
+}
+
+public class C implements A, B {
+    @Override
+    public void method() {
+        A.super.method(); // 或 B.super.method()
+    }
+}
+```
+
+### 修饰符
+
+在 Java 中，接口可以使用以下修饰符：
+
+1. **访问修饰符**：
+
+    - `public`：接口可以被任何类访问。
+    - 默认（无修饰符）：接口仅限于同一包内访问。
+
+2. **其他修饰符**：
+    - `abstract`：接口默认是抽象的，即使不显式声明。
+    - `strictfp`：用于限制浮点计算的精度和舍入行为，使其符合 IEEE 754 标准。
+
+> [!NOTE]
+> 接口类不能使用 `final` 修饰，因为接口本质上是用来被实现的。
+
+## Java 核心机制
+
+### 动态绑定与静态绑定
 
 | 特性     | 动态绑定               | 静态绑定                                           |
 | -------- | ---------------------- | -------------------------------------------------- |
@@ -13,14 +114,12 @@
 | 实现方式 | 通过虚方法表           | 直接调用                                           |
 | 示例     | 子类重写父类方法       | 构造方法、静态方法调用                             |
 
-## 泛型擦拭
+### 泛型擦拭
 
 Java 编译器在编译泛型代码时，会移除所有泛型类型参数 ，并将它们替换为：
 
 -   如果有上界（如 `<T extends Number>`），则替换为上界类型（如 Number）；
 -   如果没有上界（如 `<T>`），则替换为 Object。
-
-### 主要行为
 
 泛型擦拭机制主要做到以下三件事情：
 
@@ -31,9 +130,10 @@ Java 编译器在编译泛型代码时，会移除所有泛型类型参数 ，�
 
 这些实现方式保证了 Java 泛型的向后兼容性，但也带来了类型信息在运行时不可用等局限性。
 
-**注：java**对于不同泛型参数的类得到的 class 对象相同
+> [!NOTE]
+> 对于不同泛型参数的类得到的 class 对象相同
 
-## 常用类或接口
+## Java 常用类或接口
 
 ### Properties
 
@@ -107,7 +207,7 @@ id=test
 name=tom
 ```
 
-## HttpSession 接口
+### HttpSession 接口
 
 Session（会话）是在客户端和服务器之间建立的一种状态机制，用于在多个请求之间保持用户状态信息。 在 Java Web 开发中，`HttpSession`接口是处理会话管理的核心 API，根据不同的 Java 版本有不同的包路径：
 
@@ -116,12 +216,12 @@ Session（会话）是在客户端和服务器之间建立的一种状态机制�
 
 这个接口提供了在多个页面请求或访问之间存储和检索用户信息的机制。
 
-### 生命周期
+#### 生命周期
 
 -   **创建**：首次调用`request.getSession()`或`request.getSession(true)`
 -   **销毁**：超时（默认 30 分钟）、调用`session.invalidate()`、服务器关闭
 
-### 核心方法
+#### 核心方法
 
 -   `String getId()` - 获取会话的唯一标识符
 -   `void setAttribute(String name, Object value)` - 存储会话数据
@@ -130,7 +230,7 @@ Session（会话）是在客户端和服务器之间建立的一种状态机制�
 -   `void invalidate()` - 使会话失效
 -   `void setMaxInactiveInterval(int interval)` - 设置会话超时时间(秒)
 
-### 创建和使用 Session
+#### 创建和使用 Session
 
 ```java
 // 获取会话对象(若不存在则创建)
@@ -154,7 +254,7 @@ session.removeAttribute("loginTime");
 session.invalidate();
 ```
 
-## Cookie
+### Cookie
 
 Cookie 是存储在客户端浏览器中的小型文本数据，用于在 HTTP 请求之间保持状态信息。在 Java Web 开发中，`javax.servlet.http.Cookie` 类用于创建和管理 Cookie。
 
@@ -227,14 +327,3 @@ cookie.setMaxAge(0);
 cookie.setPath("/");
 response.addCookie(cookie);
 ```
-
-### Cookie 与 Session 对比
-
-| 特性     | Cookie                           | Session                        |
-| -------- | -------------------------------- | ------------------------------ |
-| 存储位置 | 客户端浏览器                     | 服务器内存                     |
-| 安全性   | 较低，可被客户端查看和修改       | 较高，存储在服务器             |
-| 生命周期 | 可持久化存储                     | 默认为会话级，可配置超时时间   |
-| 存储容量 | 有限(通常 4KB)                   | 较大(受服务器内存限制)         |
-| 性能     | 每次请求都会传输                 | 只传输会话标识符               |
-| 适用场景 | 记住用户名、主题偏好等非敏感信息 | 用户认证状态、购物车等敏感数据 |
