@@ -223,7 +223,7 @@ OK
 2) "value2"
 ```
 
-### HASH 相关命令
+### Hash 相关命令
 
 #### 设置哈希字段
 
@@ -697,4 +697,101 @@ ZRANK <sorted_set_name> <value>
 ZCOUNT <sorted_set_name> <min_score> <max_score>
 127.0.0.1:6379> ZCOUNT myzset 1 2
 
+```
+
+## Redis 集成
+
+### Redis 集成 Java
+
+在 Java 中，可以使用多种客户端库与 Redis 进行交互，其中最常用的是 Jedis 和 Lettuce。
+
+#### Jedis
+
+Jedis 是一个简单易用的 Redis Java 客户端，支持大部分 Redis 功能。
+
+> [!NOTE]
+> Jedis 是一个同步的 Redis 客户端，api 方法名称与 redis 命令一致
+
+##### 添加依赖
+
+在 Maven 项目中添加 Jedis 的依赖：
+
+```xml
+<dependency>
+    <groupId>redis.clients</groupId>
+    <artifactId>jedis</artifactId>
+    <version>[latest-version]</version>
+</dependency>
+```
+
+##### 基本用法
+
+以下是使用 Jedis 连接 Redis 并执行基本操作的示例：
+
+```java
+import redis.clients.jedis.Jedis;
+
+public class RedisExample {
+    public static void main(String[] args) {
+        // Step 1: 创建 Jedis 实例，连接到 Redis 服务器
+        // 参数说明：
+        // - "localhost"：Redis 服务器的主机名或 IP 地址
+        // - 6379：Redis 服务器的端口号
+        try (Jedis jedis = new Jedis("localhost", 6379)) {
+
+            // Step 2: 设置键值对
+            // 使用 set 方法将键 "key" 的值设置为 "value"
+            jedis.set("key", "value");
+            System.out.println("Set key: " + jedis.get("key")); // 输出键的值
+
+            // Step 3: 检查键是否存在
+            // 使用 exists 方法检查键 "key" 是否存在，返回 true 或 false
+            System.out.println("Key exists: " + jedis.exists("key"));
+
+            // Step 4: 删除键
+            // 使用 del 方法删除键 "key"
+            jedis.del("key");
+            System.out.println("Key deleted. Exists: " + jedis.exists("key")); // 再次检查键是否存在
+        } catch (Exception e) {
+            // 捕获并打印异常
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+##### 使用连接池
+
+为了提高性能，可以使用 Jedis 提供的连接池：
+
+```java
+public class JedisConnectionFactory {
+    // 定义一个静态的 Jedis 连接池
+    private static final JedisPool jedisPool;
+
+    static {
+        // 创建连接池配置对象
+        JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+
+        // 设置最大连接数，表示连接池中最多可以同时存在的连接数量
+        jedisPoolConfig.setMaxTotal(8);
+
+        // 设置最大空闲连接数，表示连接池中最多可以保持空闲状态的连接数量
+        jedisPoolConfig.setMaxIdle(8);
+
+        // 设置最小空闲连接数，表示连接池中最少需要保持空闲状态的连接数量
+        jedisPoolConfig.setMinIdle(0);
+
+        // 设置最大等待时间，表示当连接池中没有可用连接时，客户端等待连接的最长时间（单位：毫秒）
+        jedisPoolConfig.setMaxWaitMillis(1000);
+
+        // 初始化 Jedis 连接池，指定 Redis 服务器地址和端口
+        jedisPool = new JedisPool(jedisPoolConfig, "127.0.0.1", 6379);
+    }
+
+    // 获取 Jedis 实例的方法，从连接池中获取一个可用的连接
+    public static Jedis getJedis() {
+        return jedisPool.getResource();
+    }
+}
 ```
