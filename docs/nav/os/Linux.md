@@ -163,3 +163,73 @@ k = up # control + k
 | **!!**      | 重复执行上一条命令           |
 | **!$**      | 引用上一条命令的最后一个参数 |
 | **cd -**    | 返回上一个目录               |
+
+## 输入法
+
+### Ibus
+
+ibus 是一个流行的输入法框架，支持多种语言和输入法。
+
+#### 安装 Ibus
+
+::: code-group
+
+```paru
+paru -S ibus
+```
+
+:::
+
+#### 配置 Ibus
+
+在 `~/.xprofile` 或 `~/.bash_profile` 中添加以下内容以确保 ibus 在系统启动时运行：
+
+```bash
+export GTK_IM_MODULE=ibus
+export QT_IM_MODULE=ibus
+export XMODIFIERS=@im=ibus
+ibus-daemon -drx
+```
+
+#### 安装中文输入法
+
+对于中文输入，可以安装 Rime 输入法：
+
+::: code-group
+
+```paru
+paru -S ibus-rime
+```
+
+:::
+
+### 输入方案
+
+#### 雾凇拼音
+
+::: code-group
+
+```bash
+paru -S rime-ice-git
+```
+
+:::
+
+##### 应用方案
+
+Rime 配置文件位于 `~/.config/ibus/rime/`，可以通过修改 `default.custom.yaml` 文件来设置输入法方案。
+
+> [!NOTE]
+> `~/.config/ibus/rime/` 目录下不存在`default.custom.yaml` 文件时请手动创建
+
+```yaml
+patch:
+    __include: rime_ice_suggestion:/
+    key_binder:
+        bindings:
+            # 设置翻页键
+            - { accept: Control+k, send: Page_Up, when: has_menu }
+            - { accept: Control+j, send: Page_Down, when: has_menu }
+    menu:
+        page_size: 7 # 设置每页显示的候选词数量
+```
