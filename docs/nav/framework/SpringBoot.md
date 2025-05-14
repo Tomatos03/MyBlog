@@ -14,7 +14,109 @@
 </parent>
 ```
 
-## 整合
+## 集成
+
+### Redis
+
+#### Maven 依赖
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-redis</artifactId>
+    <version>[latest-version]</version>
+</dependency>
+<!--如果使用连接池-->
+<dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-pool2</artifactId>
+    <version>[latest-version]</version>
+</dependency>
+```
+
+#### 配置文件
+
+在`application.yml`或`application.properties`中添加 Redis 配置：
+
+```yaml
+// 新版本
+spring:
+    data:
+        redis:
+            host: localhost
+            port: 6379
+            password: zjlljz
+            timeout: 5000ms
+            database: 0
+            // 如果使用了连接池
+            lettuce:
+                pool:
+                    max-active: 8
+                    max-idle: 8
+                    min-idle: 1
+                    max-wait: 2000ms
+
+// 老版本
+spring:
+  redis:
+    host: localhost
+    port: 6379
+    password: zjlljz
+    timeout: 5000ms
+    database: 0
+    # 如果使用了连接池
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 1
+        max-wait: 2000ms
+```
+
+#### 工具类封装
+
+```java
+@Component
+public class RedisUtil {
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
+
+    /**
+     * 存储普通对象
+     */
+    public void set(String key, Object value) {
+        redisTemplate.opsForValue().set(key, value);
+    }
+
+    /**
+     * 存储普通对象并设置过期时间
+     */
+    public void set(String key, Object value, long timeout, TimeUnit unit) {
+        redisTemplate.opsForValue().set(key, value, timeout, unit);
+    }
+
+    /**
+     * 获取普通对象
+     */
+    public Object get(String key) {
+        return redisTemplate.opsForValue().get(key);
+    }
+
+    /**
+     * 删除对象
+     */
+    public Boolean delete(String key) {
+        return redisTemplate.delete(key);
+    }
+
+    /**
+     * 判断key是否存在
+     */
+    public Boolean hasKey(String key) {
+        return redisTemplate.hasKey(key);
+    }
+}
+```
 
 ### Mybatis
 
@@ -48,7 +150,7 @@
 
 #### Kaptcha
 
-##### 依赖
+##### Maven 依赖
 
 ```xml
 <dependency>
@@ -58,7 +160,7 @@
 </dependency>
 ```
 
-##### 定义配置
+##### 配置类
 
 ```java
 @Component
@@ -81,7 +183,7 @@ public class CodeConfig {
 
 ```
 
-##### 定义 Controller
+##### Controller 类
 
 ```java
 @RestController // 标记该类为RESTful控制器，处理HTTP请求
@@ -109,7 +211,7 @@ public class CaptchaController {
 }
 ```
 
-## 配置
+## 其他配置
 
 ### 数据库连接配置
 
