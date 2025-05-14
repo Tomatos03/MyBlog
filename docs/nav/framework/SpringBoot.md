@@ -16,6 +16,62 @@
 
 ## 集成
 
+### JUnit 5
+
+#### Maven 依赖
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-test</artifactId>
+    <scope>test</scope>
+</dependency>
+```
+
+> [!NOTE]
+> Spring Boot Starter Test 已经包含了 JUnit 5、Mockito、Spring Test 等测试所需的依赖。
+
+#### 基本测试类
+
+```java
+@SpringBootTest
+class ApplicationTests {
+
+    @Test
+    void contextLoads() {
+        // 测试 Spring 上下文是否正常加载
+    }
+}
+```
+
+#### 常用注解
+
+```java
+// 标记为 Spring Boot 测试类，加载完整的 Spring 应用程序上下文
+@SpringBootTest
+
+// 只加载特定配置类而不是整个应用上下文
+@SpringBootTest(classes = SpecificConfig.class)
+
+// 指定测试环境的配置属性
+@SpringBootTest(properties = "spring.profiles.active=test")
+
+// Web 环境相关测试
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+
+// 模拟 MVC 测试，不启动完整服务器
+@AutoConfigureMockMvc
+
+// 用于在每个测试方法前后进行数据库回滚，保持测试隔离性
+@Transactional
+
+// 定义测试执行顺序
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+
+// 指定执行顺序
+@Order(1)
+```
+
 ### Redis
 
 #### Maven 依赖
