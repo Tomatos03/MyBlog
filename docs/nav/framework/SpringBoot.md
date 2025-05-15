@@ -174,15 +174,33 @@ public class RedisUtil {
 }
 ```
 
-### Mybatis
+#### 常用操作
 
-```xml
-<dependency>
-	<groupId>org.mybatis.spring.boot</groupId>
-	<artifactId>mybatis-spring-boot-starter</artifactId>
-	<version>[last-version]</version>
-</dependency>
-```
+| 数据类型   | 基本操作类      | 常用操作              | 代码示例                                                                      |
+| ---------- | --------------- | --------------------- | ----------------------------------------------------------------------------- |
+| **String** | `opsForValue()` | 设置值                | `redisTemplate.opsForValue().set("key", "value");`                            |
+|            |                 | 获取值                | `String value = (String) redisTemplate.opsForValue().get("key");`             |
+|            |                 | 设置带过期时间的值    | `redisTemplate.opsForValue().set("key", "value", 1, TimeUnit.HOURS);`         |
+|            |                 | 当 key 不存在时设置值 | `redisTemplate.opsForValue().setIfAbsent("key", "value");`                    |
+|            |                 | 自增操作              | `redisTemplate.opsForValue().increment("counter", 1);`                        |
+| **Hash**   | `opsForHash()`  | 设置哈希字段          | `redisTemplate.opsForHash().put("user:1", "name", "John");`                   |
+|            |                 | 获取哈希字段          | `Object name = redisTemplate.opsForHash().get("user:1", "name");`             |
+|            |                 | 获取所有哈希字段      | `Map<Object, Object> entries = redisTemplate.opsForHash().entries("user:1");` |
+|            |                 | 删除哈希字段          | `redisTemplate.opsForHash().delete("user:1", "name", "age");`                 |
+|            |                 | 哈希字段自增          | `redisTemplate.opsForHash().increment("user:1", "visits", 1);`                |
+| **List**   | `opsForList()`  | 左侧添加元素          | `redisTemplate.opsForList().leftPush("queue", "item1");`                      |
+|            |                 | 右侧添加元素          | `redisTemplate.opsForList().rightPush("queue", "item2");`                     |
+|            |                 | 获取范围元素          | `List<Object> items = redisTemplate.opsForList().range("queue", 0, -1);`      |
+|            |                 | 左侧弹出元素          | `Object item = redisTemplate.opsForList().leftPop("queue");`                  |
+|            |                 | 右侧弹出元素          | `Object item = redisTemplate.opsForList().rightPop("queue");`                 |
+| **Set**    | `opsForSet()`   | 添加元素              | `redisTemplate.opsForSet().add("tags", "java", "spring", "redis");`           |
+|            |                 | 获取所有成员          | `Set<Object> tags = redisTemplate.opsForSet().members("tags");`               |
+|            |                 | 判断成员是否存在      | `Boolean exists = redisTemplate.opsForSet().isMember("tags", "java");`        |
+|            |                 | 移除成员              | `redisTemplate.opsForSet().remove("tags", "java");`                           |
+| **ZSet**   | `opsForZSet()`  | 添加带分数的成员      | `redisTemplate.opsForZSet().add("scores", "player1", 85.5);`                  |
+|            |                 | 获取成员分数          | `Double score = redisTemplate.opsForZSet().score("scores", "player1");`       |
+|            |                 | 获取排名范围成员      | `Set<Object> top = redisTemplate.opsForZSet().range("scores", 0, 2);`         |
+|            |                 | 自增分数              | `redisTemplate.opsForZSet().incrementScore("scores", "player1", 5.0);`        |
 
 ### Spring Security
 
