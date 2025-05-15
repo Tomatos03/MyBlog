@@ -137,7 +137,27 @@ j = down #  control + j
 k = up # control + k
 ```
 
-**注：**更详细的配置可以参考项目说明[keyd](https://github.com/rvaiya/keyd)
+或
+
+```bash
+[ids]
+
+*
+
+[main]
+
+# Maps capslock to escape when pressed and control when held.
+capslock = overload(control, esc)
+
+# Remaps the escape key to capslock
+esc = capslock
+```
+
+> [!TIP]
+> 可以使用`sudo keyd reload` 重新加载配置，`sudo keyd monitor` 查看按键名称
+
+> [!NOTE]
+> 更详细的配置可以参考项目说明[keyd](https://github.com/rvaiya/keyd)
 
 ## 终端相关
 
@@ -219,8 +239,7 @@ paru -S rime-ice-git
 
 Rime 配置文件位于 `~/.config/ibus/rime/`，可以通过修改 `default.custom.yaml` 文件来设置输入法方案。
 
-> [!NOTE]
-> `~/.config/ibus/rime/` 目录下不存在`default.custom.yaml` 文件时请手动创建
+> [!NOTE] > `~/.config/ibus/rime/` 目录下不存在`default.custom.yaml` 文件时请手动创建
 
 ```yaml
 patch:
