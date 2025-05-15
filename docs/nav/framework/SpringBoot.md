@@ -16,6 +16,109 @@
 
 ## 集成
 
+### Jackson
+
+#### Maven 依赖
+
+```xml
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+    <version>[latest-version]</version>
+</dependency>
+<!--或-->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+    <version>[latest-version]</version>
+</dependency>
+```
+
+> [!NOTE]
+> Spring Boot Web Starter 已经包含了 Jackson 依赖，通常不需要单独添加。
+
+#### 自定义配置
+
+Spring Boot 自动配置了 Jackson 的 ObjectMapper，支持日期格式化、忽略未知属性、空对象处理、时区设置等功能，如果需要在 Spring Boot 中自定义 ObjectMapper，可以创建一个配置类：
+
+```java
+@Configuration
+public class JacksonConfig {
+    @Bean
+    public ObjectMapper objectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        // 处理日期格式
+        objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+
+        // 忽略未知属性
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        // 空对象不抛出异常
+        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+
+        // 设置时区
+        objectMapper.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+
+        return objectMapper;
+    }
+}
+```
+
+#### 常用注解
+
+```java
+// 类级别注解
+@JsonIgnoreProperties({"field1", "field2"})  // 忽略特定字段
+@JsonInclude(JsonInclude.Include.NON_NULL)   // 排除 null 值字段
+@JsonRootName("user")                        // 指定序列化根节点名称
+
+// 字段/方法级别注解
+@JsonProperty("custom_name")                 // 自定义序列化属性名
+@JsonIgnore                                  // 忽略特定字段
+@JsonFormat(pattern = "yyyy-MM-dd")          // 自定义日期格式
+@JsonAlias({"name", "fullName"})             // 反序列化时支持多个属性名
+@JsonSerialize(using = CustomSerializer.class)     // 自定义序列化器
+@JsonDeserialize(using = CustomDeserializer.class) // 自定义反序列化器
+```
+
+#### 基本使用
+
+```java
+// 对象转JSON字符串
+public String objectToJson(Object object) {
+    try {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(object);
+    } catch (JsonProcessingException e) {
+        log.error("JSON序列化失败", e);
+        return null;
+    }
+}
+
+// JSON字符串转对象
+public <T> T jsonToObject(String json, Class<T> valueType) {
+    try {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readValue(json, valueType);
+    } catch (JsonProcessingException e) {
+        log.error("JSON反序列化失败", e);
+        return null;
+    }
+}
+
+// 处理泛型
+public <T> T jsonToGenericObject(String json, TypeReference<T> typeReference) {
+    try {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readValue(json, typeReference);
+    } catch (JsonProcessingException e) {
+        log.error("JSON泛型反序列化失败", e);
+        return null;
+    }
+}
+```
+
 ### JUnit 5
 
 #### Maven 依赖
