@@ -22,20 +22,14 @@
 
 ```xml
 <dependency>
-    <groupId>com.fasterxml.jackson.core</groupId>
-    <artifactId>jackson-databind</artifactId>
-    <version>[latest-version]</version>
-</dependency>
-<!--或-->
-<dependency>
     <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-web</artifactId>
+    <artifactId>spring-boot-starter-json</artifactId>
     <version>[latest-version]</version>
 </dependency>
 ```
 
 > [!NOTE]
-> Spring Boot Web Starter 已经包含了 Jackson 依赖，通常不需要单独添加。
+> Spring Boot Web Starter 包含 `spring-boot-starter-json` 依赖
 
 #### 自定义配置
 
