@@ -393,14 +393,90 @@ public class CaptchaController {
 	<groupId>mysql</groupId>
 	<artifactId>mysql-connector-java</artifactId>
 	<!--如果使用springboot-start-parent，可以省略版本号，使用父pom指定的版本-->
-	<version>8.0.33</version>
+	<version>[latest-version]</version>
 ```
 
 ```yaml
 spring:
   datasource:
-	url: jdbc:mysql://<hostname>[:<port>]/<database>[?<param1>[&<param2>...]]
+	url: jdbc:<database_type>://<hostname>[:<port>]/<database>[?<param1>[&<param2>...]]
 	username: <username>
 	password: <password>
 	driver-class-name: <full-qualified-class-name>
+
+# 示例
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/testdb?useSSL=false&serverTimezone=UTC
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
 ```
+
+## 核心接口和类
+
+### 拦截器相关接口
+
+#### HandlerInterceptor 接口
+
+`HandlerInterceptor` 是 Spring MVC 提供的一个接口，用于在请求处理的不同阶段执行自定义逻辑，通过实现 `HandlerInterceptor` 接口，可以定义自定义拦截器，用于在请求的不同阶段插入特定逻辑。
+
+> [!NOTE]
+> 定义了拦截器后，需要注册在`WebMvcConfigurer`实现类中拦截器。
+
+```java
+public interface HandlerInterceptor {
+
+    /**
+     * 在请求处理之前调用
+     * @param request 当前的 HTTP 请求
+     * @param response 当前的 HTTP 响应
+     * @param handler 处理器（控制器方法）
+     * @return 返回 true 表示继续处理，返回 false 表示中断请求
+     * @throws Exception 如果发生错误
+     */
+    boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception;
+
+    /**
+     * 在请求处理之后但在视图渲染之前调用
+     * @param request 当前的 HTTP 请求
+     * @param response 当前的 HTTP 响应
+     * @param handler 处理器（控制器方法）
+     * @param modelAndView 视图模型对象
+     * @throws Exception 如果发生错误
+     */
+    void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception;
+
+    /**
+     * 在整个请求完成后调用
+     * @param request 当前的 HTTP 请求
+     * @param response 当前的 HTTP 响应
+     * @param handler 处理器（控制器方法）
+     * @param ex 异常对象（如果有）
+     * @throws Exception 如果发生错误
+     */
+    void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception;
+}
+```
+
+注册自定义的拦截器
+
+> [!NOTE]
+> 如果路径书写错误，不会有错误提示，并且会导致拦截器不生效！
+
+```java
+@Configuration
+public class WebConfig implements WebMvcConfigurer {
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new CustomInterceptor())
+                .addPathPatterns("/**") // 拦截所有路径
+                .excludePathPatterns("/login", "/error"); // 排除特定路径
+    }
+}
+```
+
+-   **`preHandle`**：在请求处理之前调用，通常用于权限验证、日志记录等操作。返回 `true` 表示继续处理，返回 `false` 表示中断请求。
+-   **`postHandle`**：在请求处理之后但在视图渲染之前调用，适合用于修改模型数据或记录处理结果。
+-   **`afterCompletion`**：在整个请求完成后调用，通常用于资源清理或异常处理。
