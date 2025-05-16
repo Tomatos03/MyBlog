@@ -30,7 +30,7 @@ function generateNavItem(directoryPath: string): NavItem[] {
         if (stat.isFile() && fileOrDir.endsWith('.md')) {
             navItems.push({
                 text: fileOrDir.replace('.md', ''),
-                link: fullPath.replace('docs/', ''),
+                link: fullPath.replace(/^docs[\\/]/, ''),
             });
         } else if (stat.isDirectory()) {
             const newPath = path.join(directoryPath, fileOrDir);
@@ -102,5 +102,3 @@ export default function autoGenerateNavItems(navDirectoryPath: string): NavItem[
     mapFileOrDirName(navItems); // Map file or dir names to their corresponding values
     return navItems;
 }
-
-autoGenerateNavItems('nav');
