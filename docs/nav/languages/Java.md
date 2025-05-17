@@ -65,6 +65,97 @@ Java 提供了多种修饰符，用于控制类、方法、变量等的访问权
 -   **`native`**：方法由本地代码实现（非 Java 实现）。
 -   **`strictfp`**：限制浮点运算的精度和舍入行为。
 
+
+##### synchronized
+
+`synchronized` 确保多个线程在并发访问共享资源时，能够以互斥的方式执行(**同一个时刻只能有一个线程访问到资源**)，从而避免数据竞争和不一致的问题。
+
+
+###### 线程竞争
+
+下面的示例会出现线程竞争问题，导致预期结果不一定是0
+
+> [!NOTE]
+> 一个线程刚刚修改了变量的值，但还没有写回内存，另一个线程就读取了旧值并进行了修改,最终，后一个线程的修改会覆盖前一个线程的修改，导致最后结果的出错。
+
+```java
+class BankAccount {
+    private int balance;
+    public int getBalance() {
+        return balance;
+    }
+
+    public void deposit(int amount) {
+        this.balance += amount;
+    }
+
+    public void withdraw(int amount) {
+        this.balance -= amount;
+    }
+}
+```
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        BankAccount bankAccount = new BankAccount();
+        // 创建第一个线程
+        Thread thread0 = new Thread(() -> {
+            for (int i = 0; i < 1000; ++i) {
+                System.out.println(Thread.currentThread().getName());
+                bankAccount.deposit(1);
+            }
+            System.out.println("thread0 completed");
+        });
+        // 第二个线程
+        Thread thread1 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) {
+                System.out.println(Thread.currentThread().getName());
+                bankAccount.withdraw(1);
+            }
+            System.out.println("thread1 completed");
+        });
+        // 启动线程
+        thread0.start();
+        thread1.start();
+
+        try {
+            // 等待thread1、thread0执行完成
+            thread1.join();
+            thread0.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(bankAccount.getBalance());
+    }
+}
+```
+
+解决方法
+
+```java
+class BankAccount {
+    private int balance;
+    public int getBalance() {
+        return balance;
+    }
+
+    public synchronized void deposit(int amount) {
+        this.balance += amount;
+    }
+
+    public synchronized void withdraw(int amount) {
+        this.balance -= amount;
+    }
+}
+```
+
+> [!NOTE]
+>
+> -   当 `synchronized` 关键字修饰实例方法时，锁对象是 `this`，即当前实例对象。
+> -   当 `synchronized` 关键字修饰静态方法时，锁对象是当前类的 `Class` 对象。
+
 #### 变量修饰符
 
 -   **`final`**：变量的值一旦初始化后不能更改。
@@ -528,3 +619,83 @@ cookie.setMaxAge(0);
 cookie.setPath("/");
 response.addCookie(cookie);
 ```
+
+## Java线程
+
+
+### 创建线程
+
+在 Java 中，创建线程主要有两种方式：
+
+1.  继承 `Thread` 类：
+
+```java
+// 1. 定义一个类，继承 Thread 类
+class MyThread extends Thread {
+    // 2. 重写 run() 方法，编写线程执行的任务
+    @Override
+    public void run() {
+        // 线程要执行的任务
+        System.out.println("线程正在执行：" + Thread.currentThread().getName());
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // 3. 创建线程对象
+        MyThread thread1 = new MyThread();
+        // 4. 启动线程
+        thread1.start(); // 启动线程，执行 run() 方法
+
+        MyThread thread2 = new MyThread();
+        thread2.start();
+    }
+}
+```
+
+2.  实现 `Runnable` 接口：
+
+```java
+// 1. 定义一个类，实现 Runnable 接口
+class MyRunnable implements Runnable {
+    // 2. 实现 run() 方法，编写线程执行的任务
+    @Override
+    public void run() {
+        // 线程要执行的任务
+        System.out.println("线程正在执行：" + Thread.currentThread().getName());
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // 3. 创建 Runnable 对象
+        MyRunnable runnable = new MyRunnable();
+        // 4. 创建 Thread 对象，并将 Runnable 对象作为参数传递
+        Thread thread1 = new Thread(runnable);
+        // 5. 启动线程
+        thread1.start(); // 启动线程，执行 run() 方法
+        // 实际上由thread 代理执行runnable的run方法
+
+        Thread thread2 = new Thread(runnable);
+        thread2.start();
+    }
+}
+```
+
+> [!TIP]
+> 实现 `Runnable` 接口的方式更为常用，因为它避免了 Java 单继承的限制，并且更符合面向接口编程的思想。
+
+### 线程状态
+Java 线程有以下几种状态：
+
+| 状态             | 描述                                                         |
+| ---------------- | ------------------------------------------------------------ |
+| **NEW**          | 初始状态，线程被创建但还未启动。                             |
+| **RUNNABLE**     | 可运行状态，包括 `READY`（就绪）和 `RUNNING`（运行中）两种状态。 |
+| **BLOCKED**      | 阻塞状态，线程等待锁释放。                                   |
+| **WAITING**      | 等待状态，线程等待其他线程的通知。                           |
+| **TIMED_WAITING** | 定时等待状态，线程在指定时间内等待其他线程的通知。           |
+| **TERMINATED**   | 终止状态，线程执行完毕。                                     |
+
+
+
