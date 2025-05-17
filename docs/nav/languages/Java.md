@@ -65,15 +65,13 @@ Java 提供了多种修饰符，用于控制类、方法、变量等的访问权
 -   **`native`**：方法由本地代码实现（非 Java 实现）。
 -   **`strictfp`**：限制浮点运算的精度和舍入行为。
 
-
 ##### synchronized
 
 `synchronized` 确保多个线程在并发访问共享资源时，能够以互斥的方式执行(**同一个时刻只能有一个线程访问到资源**)，从而避免数据竞争和不一致的问题。
 
-
 ###### 线程竞争
 
-下面的示例会出现线程竞争问题，导致预期结果不一定是0
+下面的示例会出现线程竞争问题，导致预期结果不一定是 0
 
 > [!NOTE]
 > 一个线程刚刚修改了变量的值，但还没有写回内存，另一个线程就读取了旧值并进行了修改,最终，后一个线程的修改会覆盖前一个线程的修改，导致最后结果的出错。
@@ -427,6 +425,84 @@ Java 编译器在编译泛型代码时，会移除所有泛型类型参数 ，�
 
 ## Java 常用类或接口
 
+### Thread 类
+
+`Thread` 类是 Java 中用于创建和管理线程的核心类。通过继承 `Thread` 类，可以直接创建线程并定义其行为。
+
+#### 核心方法
+
+-   **`start()`** 启动线程，调用线程的 `run()` 方法。
+-   **`run()`** 定义线程的执行逻辑，通常需要重写此方法。
+-   **`sleep(long millis)`** 使当前线程休眠指定的毫秒数。
+-   **`join()`** 等待线程执行完成。
+-   **`interrupt()`** 中断线程。
+-   **`isAlive()`** 检查线程是否仍在运行。
+-   **`getName()` 和 `setName(String name)`** 获取或设置线程的名称。
+-   **`getPriority()` 和 `setPriority(int priority)`** 获取或设置线程的优先级。
+-   **`currentThread()`** 获取当前正在执行的线程对象。
+
+#### 示例代码
+
+```java
+class MyThread extends Thread {
+    @Override
+    public void run() {
+        for (int i = 0; i < 5; i++) {
+            System.out.println(Thread.currentThread().getName() + " is running: " + i);
+            try {
+                Thread.sleep(500); // 线程休眠 500 毫秒
+            } catch (InterruptedException e) {
+                System.out.println(Thread.currentThread().getName() + " was interrupted.");
+            }
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        MyThread thread1 = new MyThread();
+        thread1.setName("Thread-1");
+        thread1.setPriority(Thread.MAX_PRIORITY);
+
+        MyThread thread2 = new MyThread();
+        thread2.setName("Thread-2");
+        thread2.setPriority(Thread.MIN_PRIORITY);
+
+        thread1.start();
+        thread2.start();
+
+        try {
+            // 当前线程阻塞，等待thread1 和 thread2 执行完成
+            thread1.join();
+            thread2.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("All threads have finished execution.");
+    }
+}
+```
+
+输出示例
+
+```text
+Thread-1 is running: 0
+Thread-2 is running: 0
+Thread-1 is running: 1
+Thread-2 is running: 1
+Thread-1 is running: 2
+Thread-2 is running: 2
+Thread-1 is running: 3
+Thread-2 is running: 3
+Thread-1 is running: 4
+Thread-2 is running: 4
+All threads have finished execution.
+```
+
+> [!TIP]
+> 使用 `Thread` 类时，尽量避免直接操作线程的生命周期，推荐使用更高级的并发工具类（如 `ExecutorService`）来管理线程。
+
 ### Properties
 
 Properties 继承自 Hashtable，专门用于处理`.properties`配置文件。
@@ -620,8 +696,7 @@ cookie.setPath("/");
 response.addCookie(cookie);
 ```
 
-## Java线程
-
+## Java 线程
 
 ### 创建线程
 
@@ -686,16 +761,14 @@ public class Main {
 > 实现 `Runnable` 接口的方式更为常用，因为它避免了 Java 单继承的限制，并且更符合面向接口编程的思想。
 
 ### 线程状态
+
 Java 线程有以下几种状态：
 
-| 状态             | 描述                                                         |
-| ---------------- | ------------------------------------------------------------ |
-| **NEW**          | 初始状态，线程被创建但还未启动。                             |
-| **RUNNABLE**     | 可运行状态，包括 `READY`（就绪）和 `RUNNING`（运行中）两种状态。 |
-| **BLOCKED**      | 阻塞状态，线程等待锁释放。                                   |
-| **WAITING**      | 等待状态，线程等待其他线程的通知。                           |
-| **TIMED_WAITING** | 定时等待状态，线程在指定时间内等待其他线程的通知。           |
-| **TERMINATED**   | 终止状态，线程执行完毕。                                     |
-
-
-
+| 状态              | 描述                                                             |
+| ----------------- | ---------------------------------------------------------------- |
+| **NEW**           | 初始状态，线程被创建但还未启动。                                 |
+| **RUNNABLE**      | 可运行状态，包括 `READY`（就绪）和 `RUNNING`（运行中）两种状态。 |
+| **BLOCKED**       | 阻塞状态，线程等待锁释放。                                       |
+| **WAITING**       | 等待状态，线程等待其他线程的通知。                               |
+| **TIMED_WAITING** | 定时等待状态，线程在指定时间内等待其他线程的通知。               |
+| **TERMINATED**    | 终止状态，线程执行完毕。                                         |
