@@ -825,3 +825,25 @@ sequenceDiagram
 
 > [!TIP]
 > 选择合适的策略需要根据业务场景权衡一致性、性能和复杂性。
+
+## Java 默认行为
+
+### 字符串和其他对象加法运算
+
+在 Java 中，使用 `+` 运算符进行字符串和其他对象的加法运算时，会自动调用对象的 `toString()` 方法将对象转换为字符串。
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        A a = new A();
+        System.out.println("Hello" + a); // 输出 HelloA{}
+    }
+}
+
+class A {
+    @Override
+    public String toString() {
+        return "A{}";
+    }
+}
+```
