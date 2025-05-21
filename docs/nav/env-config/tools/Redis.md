@@ -985,13 +985,98 @@ public class CacheService {
 
 逻辑过期是一种通过在缓存中存储数据的同时记录其过期时间的方式来解决缓存击穿的问题。即使数据在逻辑上已经过期，仍然可以暂时返回旧数据，同时异步更新缓存。
 
+> [!NOTE]
+> 逻辑过期的方案牺牲了数据的一致性，但可以有效避免缓存击穿的问题。
+
+##### 示例代码
+
+> [!TIP]
+> 逻辑过期的方案会事先将数据存储在 redis 中，并设置一个过期时间
+
+```java
+    public boolean tryLock(Long id) {
+        String lockKey = RedisConstants.LOCK_SHOP_KEY + id;
+        Boolean ok = stringRedisTemplate.opsForValue().setIfAbsent(
+                lockKey,
+                id.toString(),
+                RedisConstants.LOCK_SHOP_TTL,
+                TimeUnit.SECONDS
+        );
+        return BooleanUtil.isTrue(ok);
+    }
+
+    public void unlock(Long id) {
+        String lockKey = RedisConstants.LOCK_SHOP_KEY + id;
+        stringRedisTemplate.delete(lockKey);
+    }
+
+    public Shop queryWithLogicalExpire(Long id) {
+        // 构建缓存的键
+        String shopKey = RedisConstants.CACHE_SHOP_KEY + id;
+
+        // 从 Redis 中获取缓存数据
+        String shopJson = stringRedisTemplate.opsForValue().get(shopKey);
+
+        // 如果缓存中没有数据，直接返回 null
+        if (StringUtils.isBlank(shopJson)) {
+            return null;
+        }
+
+        // 将缓存中的 JSON 数据转换为 RedisData 对象
+        RedisData redisData = JSONUtil.toBean(shopJson, RedisData.class);
+
+        // 从 RedisData 中提取实际数据并转换为 JSON 对象
+        JSONObject shop = JSONUtil.toBean((JSONObject) redisData.getData(), JSONObject.class);
+
+        // 获取缓存的逻辑过期时间
+        LocalDateTime expireTime = redisData.getExpireTime();
+
+        // 如果当前时间在逻辑过期时间之前，直接返回缓存中的数据
+        if (expireTime.isAfter(LocalDateTime.now())) {
+            return JSONUtil.toBean(shop, Shop.class);
+        }
+
+        // 尝试获取互斥锁，避免多个线程同时重建缓存
+        if (tryLock(id)) {
+            // 提交缓存重建任务到线程池
+            CACHE_REBUILD_EXECUTOR.submit(() -> {
+                try {
+                    // 重建缓存数据，并设置新的逻辑过期时间
+                    rebuildShopCache(id, 30L);
+                } catch (RuntimeException | InterruptedException e) {
+                    // 捕获异常并重新抛出
+                    throw new RuntimeException("<UNK>", e);
+                } finally {
+                    // 释放互斥锁
+                    unlock(id);
+                }
+            });
+        }
+
+        // 返回缓存中的旧数据（即使逻辑上已过期）
+        return JSONUtil.toBean(shop, Shop.class);
+    }
+```
+
+##### 优缺点
+
+**优点:**
+
+1. **性能提升**: 逻辑过期避免了直接删除数据的操作，减少了数据库的写操作频率，从而提升了系统性能。
+2. **数据可恢复性**: 数据并未真正删除，保留了历史记录，方便后续数据恢复或审计。
+3. **实现简单**: 逻辑过期通常通过添加一个标志位或时间戳字段实现，逻辑简单，易于维护。
+
+**缺点:**
+
+1. **数据膨胀**: 数据库中会保留大量过期数据，可能导致存储空间的浪费。
+2. **查询复杂性**: 查询时需要额外的条件过滤逻辑，可能增加查询复杂度和性能开销。
+3. **维护成本**: 需要定期清理过期数据，否则可能影响系统整体性能。
+
 #### 使用互斥锁
 
 在缓存失效时，通过加锁机制限制只有一个线程能够访问数据库并更新缓存，其余线程等待缓存更新完成后再读取数据。例如，可以使用分布式锁（如 Redis 的 `SETNX`）实现互斥访问。
 
 ##### 示例代码
-
-以下是一个使用互斥锁解决缓存击穿问题的示例代码：
 
 ```java
     public boolean tryLock(Long id) {
