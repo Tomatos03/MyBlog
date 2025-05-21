@@ -795,3 +795,311 @@ public class JedisConnectionFactory {
     }
 }
 ```
+
+## 内存淘汰机制
+
+Redis 提供了多种内存淘汰策略，用于在内存达到最大限制时决定如何处理新数据的写入请求。
+
+| 策略名称          | 描述                                             |
+| ----------------- | ------------------------------------------------ |
+| `noeviction`      | 不淘汰任何数据，新写入操作会返回错误。           |
+| `allkeys-lru`     | 淘汰最少使用的键，适用于所有键。                 |
+| `volatile-lru`    | 淘汰最少使用的键，仅限于设置了过期时间的键。     |
+| `allkeys-random`  | 随机淘汰键，适用于所有键。                       |
+| `volatile-random` | 随机淘汰键，仅限于设置了过期时间的键。           |
+| `volatile-ttl`    | 淘汰即将过期的键，仅限于设置了过期时间的键。     |
+| `volatile-lfu`    | 淘汰最少使用频率的键，仅限于设置了过期时间的键。 |
+| `allkeys-lfu`     | 淘汰最少使用频率的键，适用于所有键。             |
+
+> [!NOTE]
+> 可以通过配置文件中的 `maxmemory-policy` 参数设置内存淘汰策略，例如：`maxmemory-policy allkeys-lru`。
+
+### 示例配置
+
+在 `redis.conf` 文件中设置最大内存和淘汰策略：
+
+```conf
+# 设置最大内存为 2GB
+maxmemory 2gb
+
+# 设置淘汰策略为 allkeys-lru
+maxmemory-policy allkeys-lru
+```
+
+> [!TIP]
+> 使用 `INFO memory` 命令可以查看当前内存使用情况。
+
+## 缓存穿透
+
+缓存穿透是指查询一个在缓存和数据库中都不存在的数据，由于缓存未命中，系统会直接访问数据库。当大量此类请求发生时，会对数据库造成很大的压力，甚至可能导致数据库崩溃。
+
+### 解决方法
+
+#### 使用布隆过滤器
+
+布隆过滤器是一种高效的概率数据结构，用于快速判断某个元素是否可能存在于集合中。在缓存穿透场景中，可以在缓存层增加布隆过滤器，用于拦截不存在的数据请求。如果布隆过滤器判断数据不存在，则直接返回空结果，避免访问数据库，从而减少数据库的压力。
+
+#### 缓存空值
+
+对于查询结果为空的数据，也可以将其缓存起来，并设置较短的过期时间。这样可以防止频繁访问数据库，尤其是针对一些恶意请求或高频查询不存在的数据的情况。缓存空值的策略可以有效减少数据库的查询次数，但需要注意合理设置过期时间，以免占用过多缓存空间。
+
+##### 优缺点
+
+**优点**
+
+1. **减少数据库压力**：缓存空值可以有效避免频繁查询数据库，尤其是针对不存在的数据请求。
+2. **防止恶意请求**：能够拦截高频查询不存在数据的恶意请求，保护数据库免受攻击。
+3. **提升系统性能**：通过减少数据库访问次数，提升系统整体的响应速度和性能。
+4. **简单易用**：实现相对简单，只需在缓存中存储空值并设置合理的过期时间。
+
+**缺点**
+
+1. **内存占用**：缓存空值会占用一定的内存资源，可能影响其他数据的缓存效果。
+2. **过期时间管理**：需要合理设置空值的过期时间，避免占用过多缓存空间或频繁失效。
+3. **潜在误判**：如果缓存空值的逻辑不完善，可能导致误判，影响正常数据的查询。
+4. **适用场景有限**：对于高频更新的数据场景，缓存空值的效果可能不明显。
+
+##### 示例代码
+
+```java
+    public Result queryWithPassThrough(Long id) {
+        // 尝试从 Redis 中获取缓存数据
+        String key = RedisConstants.CACHE_SHOP_KEY + id;
+        String shopJson = stringRedisTemplate.opsForValue()
+                                      .get(key);
+
+        // 如果缓存中存在数据，则直接返回
+        if (!StrUtil.isBlank(shopJson)) {
+            Shop shop = JSONUtil.toBean(shopJson, Shop.class);
+            return Result.ok(shop);
+        } else if (shopJson != null) {
+            return Result.fail("no exist");
+        }
+
+        // 如果缓存中不存在数据，则查询数据库
+        Shop shop = getById(id);
+        if (Objects.isNull(shop)) {
+            stringRedisTemplate.opsForValue().set(
+                    RedisConstants.CACHE_SHOP_KEY + id,
+                    "",
+                    RedisConstants.CACHE_NULL_TTL,
+                    TimeUnit.MINUTES
+            );
+            return Result.fail("no exist!");
+        }
+
+        // 将查询到的数据存入缓存
+        stringRedisTemplate.opsForValue().set(
+                key,
+                JSONUtil.toJsonStr(shop),
+                RedisConstants.CACHE_SHOP_TTL,
+                TimeUnit.SECONDS
+        );
+        return Result.ok(shop);
+    }
+
+```
+
+> [!NOTE]
+> 缓存空值可以有效减少对数据库的访问，但需要合理设置过期时间以避免占用过多缓存空间。
+
+#### 参数校验
+
+在应用层对请求参数进行校验，可以过滤掉明显无效的请求。例如，对于格式错误或超出范围的参数，可以直接拒绝处理，而无需查询缓存或数据库。这种方法可以在请求进入系统之前就拦截无效请求，从而减少系统的负载。
+
+> [!NOTE]
+> 合理设计缓存策略和过滤机制，可以有效缓解缓存雪崩问题对系统的影响。减少缓存穿透
+
+## 缓存雪崩
+
+缓存雪崩是指在某一时刻，大量缓存同时失效，导致所有请求直接访问数据库，从而对数据库造成巨大压力，甚至可能导致系统崩溃。
+
+### 解决方法
+
+#### 缓存过期时间分散
+
+为不同的缓存设置随机的过期时间，避免大量缓存同时失效。
+
+##### 示例代码
+
+```java
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
+public class CacheService {
+
+    private static final Random RANDOM = new Random();
+
+    public void setCacheWithRandomTTL(String key, String value, int baseTTL) {
+        // 在基础过期时间上增加一个随机值，避免缓存同时失效
+        int randomTTL = baseTTL + RANDOM.nextInt(300); // 随机增加 0 到 300 秒
+        stringRedisTemplate.opsForValue().set(key, value, randomTTL, TimeUnit.SECONDS);
+    }
+}
+```
+
+##### 优缺点
+
+**优点**:
+
+1. **简单易用**：实现简单，只需在设置缓存时增加随机过期时间。
+2. **减少缓存同时失效的风险**：通过分散过期时间，避免大量缓存同时失效导致的数据库压力。
+3. **适用广泛**：适用于大多数缓存场景，无需额外的复杂逻辑。
+
+**缺点**:
+
+1. **缓存管理复杂性增加**：随机过期时间可能导致缓存数据的生命周期不一致，增加管理难度。
+2. **无法完全避免雪崩**：对于极端高并发场景，仍可能存在部分缓存失效导致的数据库压力。
+3. **数据一致性问题**：随机过期时间可能导致部分数据更新延迟，影响一致性要求较高的场景。
+
+#### 缓存预热
+
+在系统启动或流量高峰到来之前，提前将热点数据加载到缓存中，确保缓存命中率较高，从而减少对数据库的直接访问。
+
+#### 缓存降级
+
+在缓存失效或不可用时，可以通过降级策略返回默认值或部分数据，避免直接访问数据库。例如，可以返回静态页面或提示用户稍后重试。
+
+#### 多级缓存
+
+通过引入多级缓存（如本地缓存和分布式缓存），在缓存失效时优先从本地缓存中获取数据，减少对数据库的压力。
+
+#### 限流与熔断
+
+在缓存失效时，通过限流和熔断机制控制请求的数量，避免数据库因过载而崩溃。例如，可以限制每秒访问数据库的请求数量，并对超出限制的请求返回错误或延迟处理。
+
+> [!NOTE]
+> 合理设计缓存策略和失效机制，可以有效缓解缓存雪崩问题对系统的影响，确保系统的稳定性和高可用性。
+
+## 缓存击穿
+
+缓存击穿是指某些热点数据在缓存中失效后，大量并发请求直接访问数据库，导致数据库压力骤增，甚至可能引发系统性能问题。
+
+### 解决方法
+
+#### 设置热点数据永不过期
+
+对于热点数据，可以设置缓存永不过期，确保其始终存在于缓存中，从而避免缓存失效带来的问题。
+
+#### 逻辑过期
+
+逻辑过期是一种通过在缓存中存储数据的同时记录其过期时间的方式来解决缓存击穿的问题。即使数据在逻辑上已经过期，仍然可以暂时返回旧数据，同时异步更新缓存。
+
+#### 使用互斥锁
+
+在缓存失效时，通过加锁机制限制只有一个线程能够访问数据库并更新缓存，其余线程等待缓存更新完成后再读取数据。例如，可以使用分布式锁（如 Redis 的 `SETNX`）实现互斥访问。
+
+##### 示例代码
+
+以下是一个使用互斥锁解决缓存击穿问题的示例代码：
+
+```java
+    public boolean tryLock(Long id) {
+        String lockKey = RedisConstants.LOCK_SHOP_KEY + id;
+        Boolean ok = stringRedisTemplate.opsForValue().setIfAbsent(
+                lockKey,
+                id.toString(),
+                RedisConstants.LOCK_SHOP_TTL,
+                TimeUnit.SECONDS
+        );
+        return BooleanUtil.isTrue(ok);
+    }
+
+    public void unlock(Long id) {
+        String lockKey = RedisConstants.LOCK_SHOP_KEY + id;
+        stringRedisTemplate.delete(lockKey);
+    }
+
+    public Shop queryWithMutex(Long id) {
+        // 构建缓存的键
+        String shopKey = RedisConstants.CACHE_SHOP_KEY + id;
+
+        // 从 Redis 中获取缓存数据
+        String shopJson = stringRedisTemplate.opsForValue().get(shopKey);
+
+        // 如果缓存中存在数据，直接返回
+        if (StringUtils.isNotBlank(shopJson)) {
+            return JSONUtil.toBean(shopJson, Shop.class);
+        } else if (shopJson != null) {
+            // 如果缓存中存在空值（防止缓存穿透），返回 null
+            return null;
+        }
+
+        Shop shop = null;
+        try {
+            // 尝试获取互斥锁，未获取到则等待一段时间后重试
+            if (!tryLock(id)) {
+                Thread.sleep(50);
+                return queryWithMutex(id); // 递归调用，重试获取数据
+            }
+
+            // 再次检查缓存，防止其他线程已更新缓存
+            shopJson = stringRedisTemplate.opsForValue().get(shopKey);
+            if (StringUtils.isNotBlank(shopJson)) {
+                return JSONUtil.toBean(shopJson, Shop.class);
+            } else if (shopJson != null) {
+                return null;
+            }
+
+            // 缓存未命中，从数据库中查询数据
+            shop = getById(id);
+            if (Objects.isNull(shop)) {
+                // 如果数据库中也不存在，缓存空值以防止缓存穿透
+                stringRedisTemplate.opsForValue().set(
+                        shopKey,
+                        "",
+                        RedisConstants.CACHE_NULL_TTL,
+                        TimeUnit.MINUTES
+                );
+                return null;
+            }
+
+            // 将查询到的数据写入缓存
+            stringRedisTemplate.opsForValue().set(
+                    shopKey,
+                    JSONUtil.toJsonStr(shop),
+                    RedisConstants.CACHE_SHOP_TTL,
+                    TimeUnit.MINUTES
+            );
+        } catch (InterruptedException e) {
+            // 捕获线程中断异常
+            e.printStackTrace();
+        } finally {
+            // 释放互斥锁
+            unlock(id);
+        }
+        return shop; // 返回查询结果
+    }
+```
+
+##### 优缺点
+
+**优点**:
+
+1. **有效防止缓存击穿**：通过互斥锁限制并发访问，确保只有一个线程能够更新缓存，避免大量请求同时访问数据库。
+2. **保证数据一致性**：在缓存更新期间，其余线程等待缓存更新完成后再读取数据，确保返回的数据是最新的。
+3. **适用高并发场景**：在高并发场景下，互斥锁可以有效减少对数据库的压力，保护数据库的稳定性。
+
+**缺点**:
+
+1. **增加响应延迟**：未获取到锁的线程需要等待，可能导致请求响应时间增加。
+2. **潜在死锁风险**：如果锁未正确释放，可能导致死锁问题，影响系统的正常运行。
+3. **实现复杂性较高**：需要额外的逻辑处理锁的获取和释放，增加了代码的复杂性。
+4. **性能瓶颈**：在极高并发场景下，锁的竞争可能成为性能瓶颈，影响系统吞吐量。
+
+> [!TIP]
+> 在使用互斥锁时，应合理设置锁的超时时间，并确保锁能够正确释放，以避免死锁问题。
+
+> [!NOTE]
+> 通过互斥锁限制只有一个线程能够访问数据库并更新缓存，其余线程等待缓存更新完成后再读取数据，可以有效避免缓存击穿问题。
+
+#### 请求分流
+
+通过对请求进行分流，将高并发请求分散到多个缓存节点或服务实例上，减少单点压力。例如，可以使用一致性哈希算法将请求分配到不同的缓存节点。
+
+#### 限流与熔断
+
+在缓存失效时，通过限流和熔断机制控制访问数据库的请求数量，避免数据库因过载而崩溃。例如，可以限制每秒访问数据库的请求数量，并对超出限制的请求返回错误或延迟处理。
+
+> [!NOTE]
+> 合理设计缓存更新策略和并发控制机制，可以有效缓解缓存击穿问题对系统的影响，确保系统的稳定性和高可用性。
