@@ -425,6 +425,63 @@ Java 编译器在编译泛型代码时，会移除所有泛型类型参数 ，�
 
 ## Java 常用类或接口
 
+### LocalDateTime 类
+
+`LocalDateTime` 类是 Java 中用于表示日期和时间（不含时区信息）的核心类。它是不可变的，线程安全的，提供了丰富的方法来操作日期和时间。
+
+#### 核心方法
+
+-   **`now()`** 获取当前日期时间。
+-   **`of(int year, int month, int dayOfMonth, int hour, int minute)`** 创建指定日期时间的实例。
+-   **`plusDays(long days)` 和 `minusDays(long days)`** 增加或减少指定天数。
+-   **`plusHours(long hours)` 和 `minusHours(long hours)`** 增加或减少指定小时数。
+-   **`format(DateTimeFormatter formatter)`** 按指定格式化器格式化日期时间。
+-   **`parse(CharSequence text, DateTimeFormatter formatter)`** 按指定格式解析日期时间字符串。
+-   **`getYear()` 和 `getMonth()`** 获取年份和月份。
+-   **`isBefore(LocalDateTime other)` 和 `isAfter(LocalDateTime other)`** 比较两个日期时间。
+
+#### 示例代码
+
+```java
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+public class Main {
+    public static void main(String[] args) {
+        // 获取当前日期时间
+        LocalDateTime now = LocalDateTime.now();
+        System.out.println("当前日期时间: " + now);
+
+        // 创建指定日期时间
+        LocalDateTime specificDateTime = LocalDateTime.of(2023, 10, 1, 12, 30);
+        System.out.println("指定日期时间: " + specificDateTime);
+
+        // 增加和减少日期时间
+        LocalDateTime nextWeek = now.plusDays(7);
+        LocalDateTime lastHour = now.minusHours(1);
+        System.out.println("一周后: " + nextWeek);
+        System.out.println("一小时前: " + lastHour);
+
+        // 格式化日期时间
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedDateTime = now.format(formatter);
+        System.out.println("格式化日期时间: " + formattedDateTime);
+
+        // 解析日期时间字符串
+        String dateTimeString = "2023-10-01 12:30:00";
+        LocalDateTime parsedDateTime = LocalDateTime.parse(dateTimeString, formatter);
+        System.out.println("解析后的日期时间: " + parsedDateTime);
+
+        // 比较日期时间
+        if (now.isBefore(specificDateTime)) {
+            System.out.println("当前时间在指定时间之前");
+        } else {
+            System.out.println("当前时间在指定时间之后或相等");
+        }
+    }
+}
+```
+
 ### Thread 类
 
 `Thread` 类是 Java 中用于创建和管理线程的核心类。通过继承 `Thread` 类，可以直接创建线程并定义其行为。
