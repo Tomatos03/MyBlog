@@ -1006,6 +1006,19 @@ public class CacheService {
         stringRedisTemplate.delete(lockKey);
     }
 
+    public void rebuildShopCache(Long id, Long time) throws InterruptedException {
+        Shop shop = getById(id);
+        String shopKey = RedisConstants.CACHE_SHOP_KEY + shop.getId();
+
+        RedisData redisData = new RedisData();
+        redisData.setData(shop);
+        redisData.setExpireTime(LocalDateTime.now().plusSeconds(time));
+
+        stringRedisTemplate.opsForValue()
+                           .set(shopKey, JSONUtil.toJsonStr(redisData));
+    }
+
+
     public Shop queryWithLogicalExpire(Long id) {
         // 构建缓存的键
         String shopKey = RedisConstants.CACHE_SHOP_KEY + id;
