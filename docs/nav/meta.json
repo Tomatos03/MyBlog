@@ -10,7 +10,8 @@
         "dev": "开发环境",
         "deploy": "环境部署",
         "languages": "编程语言",
-        "term": "术语"
+        "term": "术语",
+        "project-solution": "常见项目方案"
     },
     "order": [
         "os",
@@ -27,6 +28,7 @@
             "order": ["term", "protocol"]
         },
         "languages",
+        "project-solution",
         "about"
     ],
     "excludeFiles": ["assets"]
