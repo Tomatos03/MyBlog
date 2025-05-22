@@ -1038,6 +1038,17 @@ public class CacheService {
 
         // 尝试获取互斥锁，避免多个线程同时重建缓存
         if (tryLock(id)) {
+            // 双重检测缓存，防止其他线程已经更新了缓存
+            shopJson = stringRedisTemplate.opsForValue().get(shopKey);
+            if (StringUtils.isNotBlank(shopJson)) {
+                redisData = JSONUtil.toBean(shopJson, RedisData.class);
+                shop = JSONUtil.toBean((JSONObject) redisData.getData(), JSONObject.class);
+                expireTime = redisData.getExpireTime();
+                if (expireTime.isAfter(LocalDateTime.now())) {
+                    return JSONUtil.toBean(shop, Shop.class);
+                }
+            }
+
             // 提交缓存重建任务到线程池
             CACHE_REBUILD_EXECUTOR.submit(() -> {
                 try {
