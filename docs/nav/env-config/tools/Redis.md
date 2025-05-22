@@ -843,6 +843,46 @@ maxmemory-policy allkeys-lru
 
 对于查询结果为空的数据，也可以将其缓存起来，并设置较短的过期时间。这样可以防止频繁访问数据库，尤其是针对一些恶意请求或高频查询不存在的数据的情况。缓存空值的策略可以有效减少数据库的查询次数，但需要注意合理设置过期时间，以免占用过多缓存空间。
 
+##### 示例代码
+
+```java
+    public Result queryWithPassThrough(Long id) {
+        // 尝试从 Redis 中获取缓存数据
+        String key = RedisConstants.CACHE_SHOP_KEY + id;
+        String shopJson = stringRedisTemplate.opsForValue()
+                                      .get(key);
+
+        // 如果缓存中存在数据，则直接返回
+        if (!StrUtil.isBlank(shopJson)) {
+            return JSONUtil.toBean(shopJson, Shop.class);
+        } else if (shopJson != null) {
+            return null;
+        }
+
+        // 如果缓存中不存在数据，则查询数据库
+        Shop shop = getById(id);
+        if (Objects.isNull(shop)) {
+            stringRedisTemplate.opsForValue().set(
+                    RedisConstants.CACHE_SHOP_KEY + id,
+                    "",
+                    RedisConstants.CACHE_NULL_TTL,
+                    TimeUnit.MINUTES
+            );
+            return null;
+        }
+
+        // 将查询到的数据存入缓存
+        stringRedisTemplate.opsForValue().set(
+                key,
+                JSONUtil.toJsonStr(shop),
+                RedisConstants.CACHE_SHOP_TTL,
+                TimeUnit.SECONDS
+        );
+        return shop;
+    }
+
+```
+
 ##### 优缺点
 
 **优点**
@@ -858,50 +898,6 @@ maxmemory-policy allkeys-lru
 2. **过期时间管理**：需要合理设置空值的过期时间，避免占用过多缓存空间或频繁失效。
 3. **潜在误判**：如果缓存空值的逻辑不完善，可能导致误判，影响正常数据的查询。
 4. **适用场景有限**：对于高频更新的数据场景，缓存空值的效果可能不明显。
-
-##### 示例代码
-
-```java
-    public Result queryWithPassThrough(Long id) {
-        // 尝试从 Redis 中获取缓存数据
-        String key = RedisConstants.CACHE_SHOP_KEY + id;
-        String shopJson = stringRedisTemplate.opsForValue()
-                                      .get(key);
-
-        // 如果缓存中存在数据，则直接返回
-        if (!StrUtil.isBlank(shopJson)) {
-            Shop shop = JSONUtil.toBean(shopJson, Shop.class);
-            return Result.ok(shop);
-        } else if (shopJson != null) {
-            return Result.fail("no exist");
-        }
-
-        // 如果缓存中不存在数据，则查询数据库
-        Shop shop = getById(id);
-        if (Objects.isNull(shop)) {
-            stringRedisTemplate.opsForValue().set(
-                    RedisConstants.CACHE_SHOP_KEY + id,
-                    "",
-                    RedisConstants.CACHE_NULL_TTL,
-                    TimeUnit.MINUTES
-            );
-            return Result.fail("no exist!");
-        }
-
-        // 将查询到的数据存入缓存
-        stringRedisTemplate.opsForValue().set(
-                key,
-                JSONUtil.toJsonStr(shop),
-                RedisConstants.CACHE_SHOP_TTL,
-                TimeUnit.SECONDS
-        );
-        return Result.ok(shop);
-    }
-
-```
-
-> [!NOTE]
-> 缓存空值可以有效减少对数据库的访问，但需要合理设置过期时间以避免占用过多缓存空间。
 
 #### 参数校验
 
@@ -1116,7 +1112,7 @@ public class CacheService {
         // 如果缓存中存在数据，直接返回
         if (StringUtils.isNotBlank(shopJson)) {
             return JSONUtil.toBean(shopJson, Shop.class);
-        } else if (shopJson != null) {
+        } else if (!Objects.isNull(shopJson)) {
             // 如果缓存中存在空值（防止缓存穿透），返回 null
             return null;
         }
@@ -1133,7 +1129,8 @@ public class CacheService {
             shopJson = stringRedisTemplate.opsForValue().get(shopKey);
             if (StringUtils.isNotBlank(shopJson)) {
                 return JSONUtil.toBean(shopJson, Shop.class);
-            } else if (shopJson != null) {
+            } else if (!Objects.isNull(shopJson)) {
+                // 如果缓存中存在空值（防止缓存穿透），返回 null
                 return null;
             }
 
