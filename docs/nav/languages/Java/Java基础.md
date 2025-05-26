@@ -183,6 +183,9 @@ class BankAccount {
 子类构造方法
 ```
 
+> [!TIP]
+> 静态成员变量和静态代码块的初始化顺序是“谁写在前面谁先执行”
+
 ```java
 class Parent {
      static {
