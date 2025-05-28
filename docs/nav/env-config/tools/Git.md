@@ -120,6 +120,37 @@ git add .
 git add <dir-name>
 ```
 
+#### 将暂存区的内容缓存
+
+有时需要临时保存当前暂存区和工作区的更改，可以使用 `git stash` 命令。
+
+```git
+# 缓存当前所有未提交的更改（包括暂存区和工作区）
+git stash
+
+# 添加描述信息（新版本写法）
+git stash push -m "message"
+# 老版本
+git stash save "message"
+
+```
+
+恢复缓存内容：
+
+```git
+# 恢复最近一次缓存，并从缓存列表中移除
+git stash pop
+
+# 恢复最近一次缓存，但不移除
+git stash apply
+
+# 查看所有缓存
+git stash list
+
+# 恢复指定缓存
+git stash apply stash@{n}
+```
+
 #### 修改本地仓库中的提交
 
 ```git
