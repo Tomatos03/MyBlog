@@ -672,3 +672,51 @@ class Child extends Parent {
 
 > [!TIP]
 > 访问修饰符按访问权限从大到小依次为：`public` > `protected` > 默认（无修饰符） > `private`。权限越大，越开放；权限越小，越受限制。
+
+## Java Lambda 表达式
+
+Lambda 表达式是 Java 8 引入的一种新语法，用于简化匿名内部类的写法，使代码更加简洁和易读。它本质上是对函数式接口（只包含一个抽象方法的接口）的实现。
+
+### 基本语法
+
+```java
+// 语法格式
+(参数列表) -> { 方法体 }
+```
+
+> [!TIP]
+>
+> -   参数类型可以省略，只有一个参数时小括号也可以省略。
+> -   方法体只有一条语句时，大括号和 `return` 可以省略。
+
+### 示例
+
+```java
+// 传统写法
+Runnable r1 = new Runnable() {
+    @Override
+    public void run() {
+        System.out.println("Hello Lambda!");
+    }
+};
+
+// Lambda 写法
+Runnable r2 = () -> System.out.println("Hello Lambda!");
+```
+
+### 函数式接口
+
+Lambda 只能用于实现函数式接口，如 `Runnable`、`Comparator<T>`、`Callable<T>` 等。可以使用 `@FunctionalInterface` 注解标记。
+
+```java
+@FunctionalInterface
+interface MyFunc {
+    int add(int a, int b);
+}
+
+MyFunc func = (a, b) -> a + b;
+System.out.println(func.add(2, 3)); // 输出 5
+```
+
+> [!TIP]
+> Lambda 表达式让代码更简洁，但要注意只适用于函数式接口。
