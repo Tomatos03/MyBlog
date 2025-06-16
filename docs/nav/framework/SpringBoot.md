@@ -481,10 +481,6 @@ public class WebConfig implements WebMvcConfigurer {
 -   **`postHandle`**：在请求处理之后但在视图渲染之前调用，适合用于修改模型数据或记录处理结果。
 -   **`afterCompletion`**：在整个请求完成后调用，通常用于资源清理或异常处理。
 
-## 前端传入数据注意事项
-
-前端传入数据的时候，后端对应的对象成员变量名称，默认情况下**需要和前端传入的参数名称一致**，
-
 ## Controller 方法参数常用注解
 
 在 Spring Boot 的 Controller 层，常用的方法参数注解有：
