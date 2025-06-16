@@ -484,3 +484,87 @@ public class WebConfig implements WebMvcConfigurer {
 ## 前端传入数据注意事项
 
 前端传入数据的时候，后端对应的对象成员变量名称，默认情况下**需要和前端传入的参数名称一致**，
+
+## Controller 方法参数常用注解
+
+在 Spring Boot 的 Controller 层，常用的方法参数注解有：
+
+-   `@RequestParam`：用于获取请求参数（如 URL 查询参数、表单参数），可指定参数名、是否必需、默认值等。
+
+    ```java
+    // 前端请求示例:
+    // GET /user?id=123
+    @GetMapping("/user")
+    public User getUser(@RequestParam("id") Long id) { ... }
+    ```
+
+-   `@PathVariable`：用于获取 URL 路径中的变量。
+
+    ```java
+    // 前端请求示例:
+    // GET /user/123
+    @GetMapping("/user/{id}")
+    public User getUserById(@PathVariable("id") Long id) { ... }
+    ```
+
+-   `@RequestBody`：用于接收请求体中的 JSON/XML 数据，并自动转换为 Java 对象。
+
+    ```java
+    // 前端请求示例:
+    // POST /user
+    // Content-Type: application/json
+    //
+    // {
+    //   "name": "Tom",
+    //   "age": 18
+    // }
+    @PostMapping("/user")
+    public void createUser(@RequestBody User user) { ... }
+    ```
+
+-   `@RequestHeader`：用于获取请求头中的参数。
+
+    ```java
+    // 前端请求示例:
+    // GET /header
+    // token: abc123
+    @GetMapping("/header")
+    public void getHeader(@RequestHeader("token") String token) { ... }
+    ```
+
+-   `@CookieValue`：用于获取 Cookie 中的值。
+
+    ```java
+    // 前端请求示例:
+    // GET /cookie
+    // Cookie: JSESSIONID=xyz456
+    @GetMapping("/cookie")
+    public void getCookie(@CookieValue("JSESSIONID") String sessionId) { ... }
+    ```
+
+-   `@ModelAttribute`：用于绑定请求参数到方法参数或模型属性，常用于表单提交。
+
+    ```java
+    // 前端请求示例:
+    // POST /user
+    // Content-Type: application/x-www-form-urlencoded
+    //
+    // name=Tom&age=18
+    @PostMapping("/user")
+    public void saveUser(@ModelAttribute User user) { ... }
+    ```
+
+-   `@Validated` / `@Valid`：用于参数校验，配合 JSR-303 注解使用。
+
+    ```java
+    // 前端请求示例:
+    // POST /user
+    // Content-Type: application/json
+    //
+    // {
+    //   "name": "Tom",
+    //   "age": 18
+    // }
+    @PostMapping("/user")
+    public void saveUser(@RequestBody @Valid User user) { ... }
+    ```
