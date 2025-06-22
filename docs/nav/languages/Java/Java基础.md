@@ -672,3 +672,124 @@ class Child extends Parent {
 
 > [!TIP]
 > 访问修饰符按访问权限从大到小依次为：`public` > `protected` > 默认（无修饰符） > `private`。权限越大，越开放；权限越小，越受限制。
+## Java 类加载器与双亲委派机制
+
+### 什么是双亲委派机制
+
+双亲委派机制（Parent Delegation Model）是 Java 类加载器（ClassLoader）的一种工作机制。它规定了类加载器在加载类时的查找顺序：**每个类加载器在加载类时，先将请求委托给父类加载器，只有父类加载器无法完成加载时，子类加载器才会尝试自己去加载。**
+
+这种机制可以保证 Java 核心类库不会被自定义的类覆盖，保证了 Java 平台的安全性和稳定性。
+
+### 类加载器的层次结构
+
+Java 的类加载器主要分为以下几种：
+
+- **启动类加载器（Bootstrap ClassLoader）**：负责加载 Java 核心类库（`JAVA_HOME/lib` 下的类），由 C++ 实现，属于 JVM 的一部分。
+- **扩展类加载器（Extension ClassLoader）**：负责加载 `JAVA_HOME/lib/ext` 目录下的类库。
+- **应用类加载器（AppClassLoader）**：负责加载应用程序的 classpath 下的类，是最常用的类加载器。
+- **自定义类加载器**：用户可以根据需要自定义类加载器，继承 `ClassLoader` 实现。
+
+它们之间形成了一个树状的父子关系：
+
+```
+BootstrapClassLoader
+        ↑
+ExtensionClassLoader
+        ↑
+AppClassLoader
+        ↑
+自定义ClassLoader
+```
+
+### 双亲委派的工作流程
+
+1. 当类加载器收到类加载请求时，首先不会自己去尝试加载，而是把请求委托给父加载器。
+2. 父加载器如果还有父加载器，则继续向上委托，直到顶层的启动类加载器。
+3. 顶层的启动类加载器会尝试加载，如果能加载则返回类对象，否则逐级返回给下层加载器。
+4. 如果父加载器都无法加载，才由当前加载器尝试自己加载。
+
+> [!TIP]
+> 这样可以避免用户自定义的类覆盖 Java 核心类库，保证了 Java 运行环境的安全。
+
+### 代码示例
+
+```java
+public class ClassLoaderDemo {
+    public static void main(String[] args) {
+        // 获取当前类的类加载器
+        ClassLoader appClassLoader = ClassLoaderDemo.class.getClassLoader();
+        System.out.println("应用类加载器: " + appClassLoader);
+
+        // 获取父类加载器（扩展类加载器）
+        ClassLoader extClassLoader = appClassLoader.getParent();
+        System.out.println("扩展类加载器: " + extClassLoader);
+
+        // 获取父类加载器的父类加载器（启动类加载器，返回 null）
+        ClassLoader bootstrapClassLoader = extClassLoader.getParent();
+        System.out.println("启动类加载器: " + bootstrapClassLoader);
+    }
+}
+```
+
+输出示例：
+
+```text
+应用类加载器: sun.misc.Launcher$AppClassLoader@18b4aac2
+扩展类加载器: sun.misc.Launcher$ExtClassLoader@1b6d3586
+启动类加载器: null
+```
+
+### 双亲委派机制的优点
+
+- **安全性**：防止核心类库被篡改或替换。
+- **避免重复加载**：同一个类只会被加载一次，保证类的唯一性。
+- **层次清晰**：各类加载器职责分明，便于管理和扩展。
+
+> [!NOTE]
+> 某些框架（如 Tomcat、JSP/Servlet 容器、OSGi）会打破双亲委派机制，实现自己的类加载逻辑，以满足热部署、隔离等需求。
+## Java 类加载机制
+
+Java 类加载机制是指 JVM 将类的字节码文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被 JVM 直接使用的 Java 类型的过程。类加载是 Java 程序运行的基础。
+
+### 类加载的时机
+
+1. **主动引用**（触发类初始化）：
+   - 创建类的实例（new）
+   - 访问类的静态变量（非 final）
+   - 调用类的静态方法
+   - 反射调用（Class.forName()）
+   - 初始化子类时父类会被初始化
+   - JVM 启动时指定的主类
+
+
+2. **被动引用**（不会触发类初始化）：
+   - 通过子类引用父类的静态字段
+   - 通过数组定义引用类
+   - 访问类的 final 常量
+
+### 类加载的过程
+
+类加载过程分为三个主要阶段：
+
+1. **加载（Loading）**：
+   - 通过类的全限定名获取类的二进制字节流
+   - 将字节流代表的静态存储结构转换为方法区的运行时数据结构
+   - 在堆中生成代表该类的 Class 对象
+
+2. **连接（Linking）**：
+   - **验证**：确保字节码文件符合 JVM 规范
+   - **准备**：为类变量分配内存并设置默认初始值
+   - **解析**：将符号引用转换为直接引用
+
+3. **初始化（Initialization）**：
+   - 执行类构造器 `<clinit>()` 方法（自动收集所有类变量的赋值动作和静态代码块）
+   - 父类的 `<clinit>()` 方法先执行
+
+> [!NOTE]
+>  验证阶段是 JVM 安全性的重要保障，可以防止恶意代码破坏 JVM 运行环境
+>
+>  类加载的验证过程包括以下几个步骤：
+> 1. **文件格式验证**：验证字节码文件是否符合 Class 文件格式规范
+> 2. **元数据验证**：验证类的元数据信息是否符合 Java 语言规范
+> 3. **字节码验证**：验证方法体中的字节码指令是否合法
+> 4. **符号引用验证**：验证符号引用是否可以转换为直接引用
