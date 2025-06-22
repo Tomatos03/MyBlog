@@ -506,3 +506,76 @@ cookie.setMaxAge(0);
 cookie.setPath("/");
 response.addCookie(cookie);
 ```
+## Comparator 接口
+
+`Comparator` 是 Java 中用于对象排序的函数式接口，位于 `java.util` 包下。它通常用于定义对象的自定义排序规则，常与集合类（如 `Collections.sort`、`List.sort`、`TreeSet`、`TreeMap` 等）配合使用。
+
+### 常用方法
+
+-   **`int compare(T o1, T o2)`**
+    比较两个对象的顺序。返回负数表示 o1 小于 o2，返回 0 表示相等，返回正数表示 o1 大于 o2。
+
+-   **`static <T> Comparator<T> reverseOrder()`**
+    返回一个比较器，按照自然顺序的逆序进行比较。
+
+-   **`static <T extends Comparable<? super T>> Comparator<T> naturalOrder()`**
+    返回一个比较器，按照对象的自然顺序进行比较。
+
+-   **`default Comparator<T> reversed()`**
+    返回当前比较器的逆序比较器。
+
+-   **`static <T, U extends Comparable<? super U>> Comparator<T> comparing(Function<? super T, ? extends U> keyExtractor)`**
+    根据提取的键值进行比较。
+
+-   **`default Comparator<T> thenComparing(Comparator<? super T> other)`**
+    当主比较器比较结果为 0 时，使用次级比较器继续比较。
+
+-   **`static <T> Comparator<T> nullsFirst(Comparator<? super T> comparator)`**
+    允许 null 值，null 排在前面。
+
+-   **`static <T> Comparator<T> nullsLast(Comparator<? super T> comparator)`**
+    允许 null 值，null 排在后面。
+
+### 示例代码
+
+```java
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        List<String> list = Arrays.asList("banana", "apple", "pear", "orange");
+
+        // 按字符串长度排序
+        list.sort(Comparator.comparingInt(String::length));
+        System.out.println("按长度排序: " + list);
+
+        // 按字母逆序排序
+        list.sort(Comparator.reverseOrder());
+        System.out.println("逆序排序: " + list);
+
+        // 多条件排序：先按长度，再按字母顺序
+        list.sort(
+            Comparator.comparingInt(String::length)
+                      .thenComparing(Comparator.naturalOrder())
+        );
+        System.out.println("多条件排序: " + list);
+
+        // 允许 null，null 排在前面
+        List<String> listWithNull = Arrays.asList("apple", null, "banana");
+        listWithNull.sort(Comparator.nullsFirst(Comparator.naturalOrder()));
+        System.out.println("null 排前: " + listWithNull);
+    }
+}
+```
+
+输出示例
+
+```text
+按长度排序: [pear, apple, banana, orange]
+逆序排序: [pear, orange, banana, apple]
+多条件排序: [pear, apple, banana, orange]
+null 排前: [null, apple, banana]
+```
+
+> [!TIP]
+> `Comparator` 是函数式接口，可以使用 Lambda 表达式简化排序代码，例如：`list.sort((a, b) -> a.length() - b.length());`
