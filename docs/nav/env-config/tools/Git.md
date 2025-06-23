@@ -388,6 +388,8 @@ A --- B --- C (main)
 
 `.gitignore` 文件用于指定 Git 在提交时应忽略的文件和目录，常用于排除编译生成文件、临时文件、敏感信息等。
 
+> [!NOTE] > `.gitignore` 文件只会影响未被 Git 跟踪的文件。如果某个文件已经被 Git 跟踪，添加到 `.gitignore` 后仍然需要手动将其从 Git 暂存区中移除。
+
 ### 创建 .gitignore 文件
 
 在项目根目录下新建 `.gitignore` 文件，并添加需要忽略的规则。例如：
@@ -395,22 +397,15 @@ A --- B --- C (main)
 ### 常用规则说明
 
 -   `*.log`：忽略所有以 `.log` 结尾的文件
--   `build/`：忽略 `build` 目录及其内容
--   `!important.log`：但不忽略 `important.log` 文件（`!` 表示例外）
--   `/config/`：只忽略项目根目录下的 `config` 文件夹
+-   `build/`：忽略所有名为 `build` 目录, 包括子目录之中的`build` 目录, 不忽略名为 `build` 的文件
+-   `build`：与上一条规则基本一致, 但这规则会忽略名为 `build` 的文件
+-   `!important.log`：不忽略 `important.log` 文件, 统测搭配其他规则使用
+-   `/build/`：只忽略项目根目录下的 `build` 文件夹, 不忽略子目录中的 `build` 文件夹
 
 ### 查看已忽略文件
 
 ```git
 git status --ignored
-```
-
-### 忽略已被 Git 跟踪的文件
-
-如果某些文件已被 Git 跟踪，添加到 `.gitignore` 后还需移除缓存：
-
-```git
-git rm --cached <file>
 ```
 
 ## 个人开发
