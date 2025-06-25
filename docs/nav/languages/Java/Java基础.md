@@ -558,22 +558,24 @@ sequenceDiagram
 
 ## Java 默认行为
 
-### 字符串和其他对象加法运算
-
-在 Java 中，使用 `+` 运算符进行字符串和其他对象的加法运算时，会自动调用对象的 `toString()` 方法将对象转换为字符串。
+### 字符串的加法运算
 
 ```java
 public class Main {
     public static void main(String[] args) {
-        A a = new A();
-        System.out.println("Hello" + a); // 输出 HelloA{}
+        Person person = new Person();
+        System.out.println("hee" + person);
+        System.out.println(1 + "Hee");
     }
 }
 
-class A {
-    @Override
-    public String toString() {
-        return "A{}";
+// 反编译的class文件
+public class Main {
+    public static void main(String[] args) {
+        Person person = new Person();
+        // String的vlueOf(Object obj) 方法如果传入对象为null则为"null", 否则调用对象的 toString() 方法
+        System.out.println("hee" + String.valueOf(person));
+        System.out.println("1.0Hee");
     }
 }
 ```
