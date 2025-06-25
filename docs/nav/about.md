@@ -9,7 +9,7 @@
     <section :class="$style.section">
         <h2 :class="$style.sectionTitle">关于我</h2>
         <p :class="$style.description">我是一名在校大学生，热衷于编程和技术。</p>
-        <p :class="$style.description">在学习之余，我喜欢探索新技术和研究算法，不断提升自己的技能。</p>
+        <p :class="$style.description">在学习之余，探索新技术和研究算法，提高个人能力</p>
     </section>
     <section :class="$style.section">
         <h2 :class="$style.sectionTitle">技能</h2>
