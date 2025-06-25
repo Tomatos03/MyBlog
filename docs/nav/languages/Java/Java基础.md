@@ -672,6 +672,7 @@ class Child extends Parent {
 
 > [!TIP]
 > 访问修饰符按访问权限从大到小依次为：`public` > `protected` > 默认（无修饰符） > `private`。权限越大，越开放；权限越小，越受限制。
+
 ## Java 类加载器与双亲委派机制
 
 ### 什么是双亲委派机制
@@ -684,10 +685,10 @@ class Child extends Parent {
 
 Java 的类加载器主要分为以下几种：
 
-- **启动类加载器（Bootstrap ClassLoader）**：负责加载 Java 核心类库（`JAVA_HOME/lib` 下的类），由 C++ 实现，属于 JVM 的一部分。
-- **扩展类加载器（Extension ClassLoader）**：负责加载 `JAVA_HOME/lib/ext` 目录下的类库。
-- **应用类加载器（AppClassLoader）**：负责加载应用程序的 classpath 下的类，是最常用的类加载器。
-- **自定义类加载器**：用户可以根据需要自定义类加载器，继承 `ClassLoader` 实现。
+-   **启动类加载器（Bootstrap ClassLoader）**：负责加载 Java 核心类库（`JAVA_HOME/lib` 下的类），由 C++ 实现，属于 JVM 的一部分。
+-   **扩展类加载器（Extension ClassLoader）**：负责加载 `JAVA_HOME/lib/ext` 目录下的类库。
+-   **应用类加载器（AppClassLoader）**：负责加载应用程序的 classpath 下的类，是最常用的类加载器。
+-   **自定义类加载器**：用户可以根据需要自定义类加载器，继承 `ClassLoader` 实现。
 
 它们之间形成了一个树状的父子关系：
 
@@ -741,12 +742,13 @@ public class ClassLoaderDemo {
 
 ### 双亲委派机制的优点
 
-- **安全性**：防止核心类库被篡改或替换。
-- **避免重复加载**：同一个类只会被加载一次，保证类的唯一性。
-- **层次清晰**：各类加载器职责分明，便于管理和扩展。
+-   **安全性**：防止核心类库被篡改或替换。
+-   **避免重复加载**：同一个类只会被加载一次，保证类的唯一性。
+-   **层次清晰**：各类加载器职责分明，便于管理和扩展。
 
 > [!NOTE]
 > 某些框架（如 Tomcat、JSP/Servlet 容器、OSGi）会打破双亲委派机制，实现自己的类加载逻辑，以满足热部署、隔离等需求。
+
 ## Java 类加载机制
 
 Java 类加载机制是指 JVM 将类的字节码文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被 JVM 直接使用的 Java 类型的过程。类加载是 Java 程序运行的基础。
@@ -754,42 +756,159 @@ Java 类加载机制是指 JVM 将类的字节码文件加载到内存，并对�
 ### 类加载的时机
 
 1. **主动引用**（触发类初始化）：
-   - 创建类的实例（new）
-   - 访问类的静态变量（非 final）
-   - 调用类的静态方法
-   - 反射调用（Class.forName()）
-   - 初始化子类时父类会被初始化
-   - JVM 启动时指定的主类
 
+    - 创建类的实例（new）
+    - 访问类的静态变量（非 final）
+    - 调用类的静态方法
+    - 反射调用（Class.forName()）
+    - 初始化子类时父类会被初始化
+    - JVM 启动时指定的主类
 
 2. **被动引用**（不会触发类初始化）：
-   - 通过子类引用父类的静态字段
-   - 通过数组定义引用类
-   - 访问类的 final 常量
+    - 通过子类引用父类的静态字段
+    - 通过数组定义引用类
+    - 访问类的 final 常量
 
 ### 类加载的过程
 
 类加载过程分为三个主要阶段：
 
 1. **加载（Loading）**：
-   - 通过类的全限定名获取类的二进制字节流
-   - 将字节流代表的静态存储结构转换为方法区的运行时数据结构
-   - 在堆中生成代表该类的 Class 对象
+
+    - 通过类的全限定名获取类的二进制字节流
+    - 将字节流代表的静态存储结构转换为方法区的运行时数据结构
+    - 在堆中生成代表该类的 Class 对象
 
 2. **连接（Linking）**：
-   - **验证**：确保字节码文件符合 JVM 规范
-   - **准备**：为类变量分配内存并设置默认初始值
-   - **解析**：将符号引用转换为直接引用
+
+    - **验证**：确保字节码文件符合 JVM 规范
+    - **准备**：为类变量分配内存并设置默认初始值
+    - **解析**：将符号引用转换为直接引用
 
 3. **初始化（Initialization）**：
-   - 执行类构造器 `<clinit>()` 方法（自动收集所有类变量的赋值动作和静态代码块）
-   - 父类的 `<clinit>()` 方法先执行
+    - 执行类构造器 `<clinit>()` 方法（自动收集所有类变量的赋值动作和静态代码块）
+    - 父类的 `<clinit>()` 方法先执行
 
 > [!NOTE]
->  验证阶段是 JVM 安全性的重要保障，可以防止恶意代码破坏 JVM 运行环境
+> 验证阶段是 JVM 安全性的重要保障，可以防止恶意代码破坏 JVM 运行环境
 >
->  类加载的验证过程包括以下几个步骤：
+> 类加载的验证过程包括以下几个步骤：
+>
 > 1. **文件格式验证**：验证字节码文件是否符合 Class 文件格式规范
 > 2. **元数据验证**：验证类的元数据信息是否符合 Java 语言规范
 > 3. **字节码验证**：验证方法体中的字节码指令是否合法
 > 4. **符号引用验证**：验证符号引用是否可以转换为直接引用
+
+## Java 注解
+
+### 自定义注解
+
+使用`@interface`来声明自己的注解, 通过无参数的方法声明注解的属性，其中`方法名`即为`属性名`，`方法返回值类型`即为`属性值需要的类型`。如果想要指定默认值，可以使用 `default` 关键字
+
+```java
+public @interface Example {
+    String name();           // 必须赋值的属性
+    int count() default 1;   // 有默认值的属性，可选赋值
+}
+```
+
+> [!NOTE]
+> 如果注解只有一个名为 `value` 的属性，使用时可以省略属性名直接赋值。 \
+> 注解属性类型只能是基本类型、`String`、`Class`、枚举、注解或这些类型的数组。
+
+使用注解时，必须为没有默认值的属性赋值：
+
+```java
+@Example(name = "test")
+public void foo() {}
+
+@Example(name = "test", count = 5)
+public void bar() {}
+```
+
+### 常见内置注解
+
+-   `@Override`：用于标记方法是重写父类方法，编译器会检查方法签名是否正确。
+-   `@Deprecated`：标记方法或类已过时，使用时会有警告。
+-   `@SuppressWarnings`：抑制编译器警告。
+-   `@FunctionalInterface`：标记接口为函数式接口（只能有一个抽象方法）。
+
+元注解是用于修饰注解的注解，常见的有：
+
+-   `@Retention`：指定注解的保留策略（如 `SOURCE`、`CLASS`、`RUNTIME`）。
+-   `@Target`：指定注解可以应用的位置（如类、方法、字段等）。
+-   `@Documented`：在生成对应的 Javadoc 的时候, 注解是否包含在 Javadoc 中。
+-   `@Inherited`：子类是否可以继承父类的注解。
+
+### 注解相关枚举
+
+在自定义注解时，经常会用到 JDK 提供的两个与注解相关的枚举类型：`RetentionPolicy` 和 `ElementType`。它们分别用于指定注解的保留策略和注解的作用目标。
+
+#### RetentionPolicy
+
+`RetentionPolicy` 枚举用于指定注解在什么阶段保留：
+
+-   `SOURCE`：注解只在源代码中保留，编译后被丢弃（如 `@Override`）。
+-   `CLASS`：注解在编译后保留在 class 文件中，但运行时不可见（默认值）。
+-   `RUNTIME`：注解在运行时依然存在，JVM 可以读取（如自定义运行时注解）。
+
+```java
+@Retention(RetentionPolicy.RUNTIME)
+public @interface MyAnnotation {}
+```
+
+#### ElementType
+
+`ElementType` 枚举用于指定注解可以应用于哪些 Java 程序元素：
+
+-   `TYPE`：类、接口（包括注解类型）、枚举
+-   `FIELD`：字段（成员变量、枚举常量）
+-   `METHOD`：方法
+-   `PARAMETER`：方法参数
+-   `CONSTRUCTOR`：构造方法
+-   `LOCAL_VARIABLE`：局部变量
+-   `ANNOTATION_TYPE`：注解类型
+-   `PACKAGE`：包
+-   `TYPE_PARAMETER`：类型参数（Java 8+）
+-   `TYPE_USE`：任何使用类型的地方（Java 8+）
+
+```java
+@Target({ElementType.METHOD, ElementType.TYPE})
+public @interface MyAnnotation {}
+```
+
+> [!TIP]
+> 可以通过组合多个 `ElementType`，让注解同时作用于多种目标。
+
+### 解析注解
+
+注解本身只是元数据，若要在运行时读取注解信息, 注解的保留策略必须是`RUNTIME`, 读取时使用 Java 反射机制。例如：
+
+```java
+import java.lang.annotation.*;
+import java.lang.reflect.Method;
+
+// 声明注解
+@Retention(RetentionPolicy.RUNTIME) // 运行时可见
+@Target(ElementType.METHOD) // 只能用于方法
+public @interface MyAnnotation {
+    String value();
+}
+
+// 使用注解
+public class Demo {
+    @MyAnnotation("test method")
+    public void test() {}
+}
+
+// 读取注解
+public class Main {
+    public static void main(String[] args) throws Exception {
+        Method method = Demo.class.getMethod("test");
+        if (method.isAnnotationPresent(MyAnnotation.class)) {
+            MyAnnotation annotation = method.getAnnotation(MyAnnotation.class);
+            System.out.println(annotation.value()); // 输出 "test method"
+        }
+    }
+}
+```
