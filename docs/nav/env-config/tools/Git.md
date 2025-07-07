@@ -388,7 +388,8 @@ A --- B --- C (main)
 
 `.gitignore` 文件用于指定 Git 在提交时应忽略的文件和目录，常用于排除编译生成文件、临时文件、敏感信息等。
 
-> [!NOTE] > `.gitignore` 文件只会影响未被 Git 跟踪的文件。如果某个文件已经被 Git 跟踪，添加到 `.gitignore` 后仍然需要手动将其从 Git 暂存区中移除。
+> [!NOTE]
+> `.gitignore` 文件只会影响未被 Git 跟踪的文件。如果某个文件已经被 Git 跟踪，添加到 `.gitignore` 后仍然需要手动将其从 Git 暂存区中移除。
 
 ### 创建 .gitignore 文件
 
