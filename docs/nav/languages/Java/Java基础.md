@@ -586,95 +586,6 @@ class Child extends Parent {
 > [!TIP]
 > 访问修饰符按访问权限从大到小依次为：`public` > `protected` > 默认（无修饰符） > `private`。权限越大，越开放；权限越小，越受限制。
 
-## Java 类加载顺序
-
-在 Java 中，类的加载顺序是由 JVM 在运行时动态决定的。类加载的顺序直接影响类的初始化和静态块的执行顺序。
-
-### 加载顺序
-
-以下是类加载的顺序，使用箭头图示说明：
-
-```plaintext
-父类静态代码块和静态变量
-    ↓
-子类静态代码块和静态变量
-    ↓
-父类实例变量和初始化块
-    ↓
-父类构造方法
-    ↓
-子类实例变量和初始化块
-    ↓
-子类构造方法
-```
-
-> [!TIP]
-> 静态成员变量和静态代码块的初始化顺序是“谁写在前面谁先执行”
-
-```java
-class Parent {
-     static {
-          System.out.println("父类静态代码块");
-     }
-
-     {
-          System.out.println("父类实例初始化块");
-     }
-
-     public Parent() {
-          System.out.println("父类构造方法");
-     }
-}
-
-class Child extends Parent {
-     static {
-          System.out.println("子类静态代码块");
-     }
-
-     {
-          System.out.println("子类实例初始化块");
-     }
-
-     public Child() {
-          System.out.println("子类构造方法");
-     }
-}
-
-public class Main {
-     public static void main(String[] args) {
-          System.out.println("创建第一个子类对象：");
-          new Child();
-
-          System.out.println("\n创建第二个子类对象：");
-          new Child();
-     }
-}
-```
-
-输出结果:
-
-```text
-    父类静态代码块
-    子类静态代码块
-
-    创建第一个子类对象时：
-
-    父类实例初始化块
-    父类构造方法
-    子类实例初始化块
-    子类构造方法
-
-    创建第二个子类对象时：
-
-    父类实例初始化块
-    父类构造方法
-    子类实例初始化块
-    子类构造方法
-```
-
-> [!TIP]
-> 静态代码块的执行顺序与类的加载顺序一致，而实例初始化块和构造方法的执行顺序与对象的创建顺序一致。
-
 ## Java 类加载器与双亲委派机制
 
 ### 什么是双亲委派机制
@@ -770,6 +681,93 @@ Java 类加载机制是指 JVM 将类的字节码文件加载到内存，并对�
     - 通过子类引用父类的静态字段
     - 通过数组定义引用类
     - 访问类的 final 常量
+
+### 类加载的顺序
+
+在 Java 中，类的加载顺序是由 JVM 在运行时动态决定的。类加载的顺序直接影响类的初始化和静态块的执行顺序。
+
+以下是类加载的顺序，使用箭头图示说明：
+
+```plaintext
+父类静态代码块和静态变量
+    ↓
+子类静态代码块和静态变量
+    ↓
+父类实例变量和初始化块
+    ↓
+父类构造方法
+    ↓
+子类实例变量和初始化块
+    ↓
+子类构造方法
+```
+
+> [!TIP]
+> 静态成员变量和静态代码块的初始化顺序是“谁写在前面谁先执行”
+
+```java
+class Parent {
+     static {
+          System.out.println("父类静态代码块");
+     }
+
+     {
+          System.out.println("父类实例初始化块");
+     }
+
+     public Parent() {
+          System.out.println("父类构造方法");
+     }
+}
+
+class Child extends Parent {
+     static {
+          System.out.println("子类静态代码块");
+     }
+
+     {
+          System.out.println("子类实例初始化块");
+     }
+
+     public Child() {
+          System.out.println("子类构造方法");
+     }
+}
+
+public class Main {
+     public static void main(String[] args) {
+          System.out.println("创建第一个子类对象：");
+          new Child();
+
+          System.out.println("\n创建第二个子类对象：");
+          new Child();
+     }
+}
+```
+
+输出结果:
+
+```text
+    父类静态代码块
+    子类静态代码块
+
+    创建第一个子类对象时：
+
+    父类实例初始化块
+    父类构造方法
+    子类实例初始化块
+    子类构造方法
+
+    创建第二个子类对象时：
+
+    父类实例初始化块
+    父类构造方法
+    子类实例初始化块
+    子类构造方法
+```
+
+> [!TIP]
+> 静态代码块的执行顺序与类的加载顺序一致，而实例初始化块和构造方法的执行顺序与对象的创建顺序一致。
 
 ### 类加载的过程
 
