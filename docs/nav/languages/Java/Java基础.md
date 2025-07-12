@@ -953,3 +953,12 @@ jar cvf jar_name.jar -C out .
 # 清理项目旧的输出, 重新编译打包成 Jar 文件:
 mvn clean package
 ```
+## Java 多线程
+
+### Java 线程状态模型
+
+完整线程模型以及线程状态转如下所示：
+![alt text](assets/image.png-1752249497567.png)
+
+简化图示:
+![alt text](assets/image.png-1752249576397.png)
