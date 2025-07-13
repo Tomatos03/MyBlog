@@ -11,7 +11,8 @@
         "deploy": "环境部署",
         "languages": "编程语言",
         "term": "术语",
-        "project-solution": "常见项目方案"
+        "project-solution": "常见项目方案",
+        "design-diagram": "设计图"
     },
     "order": [
         "os",
