@@ -12,7 +12,8 @@
         "languages": "编程语言",
         "term": "术语",
         "project-solution": "常见项目方案",
-        "design-diagram": "设计图"
+        "design-diagram": "设计图",
+        "web-security": "网络安全"
     },
     "order": [
         "os",
@@ -30,6 +31,7 @@
         },
         "languages",
         "project-solution",
+        "web-security",
         "about"
     ],
     "excludeFiles": ["assets"]
