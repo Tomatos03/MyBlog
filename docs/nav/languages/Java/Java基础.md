@@ -962,3 +962,63 @@ mvn clean package
 
 简化图示:
 ![alt text](assets/image.png-1752249576397.png)
+
+## Java 深拷贝和浅拷贝
+
+### 深拷贝与浅拷贝的区别
+
+在 Java 中，拷贝对象时有两种方式：**浅拷贝**和**深拷贝**。
+
+- **浅拷贝**：只复制对象本身，对于对象中的引用类型字段，只复制引用地址, 共用同一份对象, 对于基本数据类型字段则复制其值, 各自拥有独立的值, 修改不会相互影响.
+- **深拷贝**：不仅复制对象本身，还会递归复制对象中的所有引用类型字段，拷贝出的对象与原对象完全独立，互不影响。
+
+> [!TIP]
+> 无论是深拷贝还是浅拷贝都会创建一个新对象
+
+#### 示例代码
+
+```java
+class Person implements Cloneable {
+    String name;
+    Address address;
+
+    public Person(String name, Address address) {
+        this.name = name;
+        this.address = address;
+    }
+
+    // 浅拷贝
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
+    // 深拷贝
+    public Person deepClone() throws CloneNotSupportedException {
+        Person cloned = (Person) super.clone();
+        cloned.address = (Address) address.clone();
+        return cloned;
+    }
+}
+
+class Address implements Cloneable {
+    String city;
+    public Address(String city) { this.city = city; }
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+}
+```
+
+#### 对比总结
+
+| 特性     | 浅拷贝                       | 深拷贝                       |
+| -------- | ---------------------------- | ---------------------------- |
+| 基本类型 | 复制值                       | 复制值                       |
+| 引用类型 | 复制引用地址（指向同一对象） | 复制新对象（完全独立）       |
+| 影响     | 修改引用对象会互相影响        | 修改互不影响                 |
+| 实现方式 | `Object.clone()` 默认行为     | 需手动递归拷贝引用类型字段   |
+
+> [!TIP]
+> 深拷贝常见实现方式：重写 `clone()` 方法、序列化与反序列化、第三方库（如 Apache Commons Lang）。
