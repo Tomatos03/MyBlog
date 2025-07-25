@@ -226,7 +226,37 @@ git push --set-upstream origin main
 git push -u origin main
 ```
 
-### 日志
+### 信息查看
+
+#### 查看某个提交点提交信息
+
+```git
+# 输出包含一些变更的内容
+git show <hash-code>
+
+# 输出不包含变更的内容
+git show -s <hash-code>
+```
+
+
+#### 查看所有分支以及所处分支
+
+```git
+git branch
+
+# 查看本地和远程分支
+git branch -a
+
+# 该命令结果可能如下
+# * main
+#   remotes/origin/HEAD -> origin/main
+#   remotes/origin/main
+#   remotes/origin/feature
+
+# * 表示当前所在分支
+# remotes/origin/HEAD -> origin/main 表示远程仓库的默认分支是 main
+# remotes/origin/feature 表示远程仓库的 feature 分支
+```
 
 #### 查看提交日志
 
@@ -260,26 +290,6 @@ git reflog --oneline
 
 ### 分支
 
-#### 查看所有分支以及所处分支
-
-```git
-git branch
-
-# 查看本地和远程分支
-git branch -a
-
-# 该命令结果可能如下
-# * main
-#   remotes/origin/HEAD -> origin/main
-#   remotes/origin/main
-#   remotes/origin/feature
-
-# * 表示当前所在分支
-# remotes/origin/HEAD -> origin/main 表示远程仓库的默认分支是 main
-# remotes/origin/feature 表示远程仓库的 feature 分支
-```
-
-####
 
 #### 重命名分支
 
