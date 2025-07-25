@@ -125,3 +125,23 @@ XSS（跨站脚本攻击，Cross-Site Scripting）是一种常见的 Web 安全�
 - 启用内容安全策略（CSP），限制页面可执行的脚本来源。
 - 避免在页面中直接拼接和输出用户输入的数据。
 - 定期对网站进行安全检测，修复潜在的 XSS 漏洞。
+
+## Cross-Origin Request
+跨域请求（Cross-Origin Request）是指浏览器中的 JavaScript 代码发起的请求 URL 与当前页面 URL 的**源**（Origin）不同。
+
+当以下任一条件不同时，浏览器认为这是一个跨域请求：
+
+-   协议（Protocol）：如 HTTP 与 HTTPS
+-   域名 or 主机（Domain or Host）：如 example.com 与 api.example.com
+-   端口（Port）：如 example.com:80 与 example.com:8080
+
+### 解决跨域问题的方法
+
+#### 添加反向代理服务器
+
+在开发环境中，可以通过配置反向代理来解决跨域问题。反向代理服务器会将请求转发到目标服务器，从而避免浏览器的同源策略限制。
+
+下面是一个Nginx的示例:
+1. 将静态资源放在 Nginx 的静态资源目录下。
+2. 浏览器访问反向代理服务器配置的地址, 如 `http://localhost:3000/api`(如果存在凭证,此时会携带)
+3. Nginx 将请求转发到目标服务器，如 `http://localhost:8080/api`

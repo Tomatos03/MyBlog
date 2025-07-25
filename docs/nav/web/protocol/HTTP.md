@@ -120,35 +120,3 @@ Content-Length: 138                 # 响应头部结束
 | 503    | Service Unavailable   | 服务器暂时不可用               | 服务器维护中、系统过载                         |
 | 504    | Gateway Timeout       | 作为网关的服务器请求超时       | 代理服务器等待后端服务响应超时                 |
 
-## 跨域请求
-
-### 什么是跨域请求
-
-跨域请求（Cross-Origin Request）是指浏览器中的 JavaScript 代码发起的请求 URL 与当前页面 URL 的**源**（Origin）不同。
-
-当以下任一条件不同时，浏览器认为这是一个跨域请求：
-
--   协议（Protocol）：如 HTTP 与 HTTPS
--   域名/主机（Domain/Host）：如 example.com 与 api.example.com
--   端口（Port）：如 example.com:80 与 example.com:8080
-
-### 同源策略（Same-Origin Policy）
-
-浏览器的同源策略是一种安全机制，限制一个源的文档或脚本如何与另一个源的资源进行交互，这是防止恶意网站读取其他网站数据的关键安全措施。
-
-### 跨域情况示例
-
-| 当前页面 URL               | 请求 URL                       | 是否跨域 | 原因                        |
-| -------------------------- | ------------------------------ | -------- | --------------------------- |
-| `https://example.com/page` | `https://example.com/api`      | 否       | 完全相同源                  |
-| `https://example.com/page` | `http://example.com/api`       | 是       | 协议不同 (HTTPS vs HTTP)    |
-| `https://example.com/page` | `https://api.example.com/v1`   | 是       | 子域名不同                  |
-| `https://example.com/page` | `https://example.com:8080/api` | 是       | 端口不同 (默认 443 vs 8080) |
-| `https://example.com/page` | `https://example.org/api`      | 是       | 域名完全不同                |
-
-### 解决跨域问题的常见方法
-
--   **CORS (跨源资源共享)**：服务器设置 `Access-Control-Allow-Origin` 等响应头
--   **JSONP**：利用 `<script>` 标签不受同源策略限制的特性
--   **代理服务器**：在同源的服务器上创建代理转发请求
--   **WebSocket**：WebSocket 连接不受同源策略限制
