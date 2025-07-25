@@ -4,6 +4,14 @@ Spring Security 基于 Servelet 提供的 Filter 接口。在 Spring Security �
 
 ![img](https://blog.shusheng007.top/wp-content/uploads/2023/02/608ac21fb88c45b38f94a9f1a3cbd22d.png)
 
+## 默认行为
+
+1. 访问任何端点都需要一个经过认证的账户
+2. 在启动时注册一个默认账户, 用户名为 `user`，密码为随机生成的字符串输出在控制台之中
+3. 密码存储默认使用 BCrypt 算法加密
+
+
+
 ## 接口
 
 ### Authentication
