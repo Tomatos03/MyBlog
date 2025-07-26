@@ -1022,3 +1022,45 @@ class Address implements Cloneable {
 
 > [!TIP]
 > 深拷贝常见实现方式：重写 `clone()` 方法、序列化与反序列化、第三方库（如 Apache Commons Lang）。
+
+## Java 枚举
+
+Java 枚举（`enum`）是一种特殊的类，用于定义一组常量。枚举类型在编译后会生成一个继承自 `java.lang.Enum` 的类，具有类型安全和丰富的功能。
+
+### 基本用法
+
+```java
+// 定义一个枚举类型
+public enum Color {
+    RED(0, "红色"), 
+    GREEN(1, "绿色"), 
+    BLUE(2, "蓝色");
+
+    private final int code; 
+    private final String description; 
+
+    // 枚举关联数据初始化顺序构造器参数顺序一致
+    Color(int code, String description) {
+        this.code = code;
+        this.description = description;
+    }
+}
+
+// 上面代码价于
+public final class Color extends Enum<Day> {
+    public static final Day RED = new Color(0, "红色");
+    public static final Day GREEN = new Color(1, "绿色");
+    public static final Day BLUE = new Color(2, "蓝色");
+
+    Color(int code, String description) {
+        this.code = code;
+        this.description = description;
+    }
+}
+
+```
+
+> [!NOTE]
+> - 枚举常量默认是 `public static final`。
+> - 枚举可以有字段、方法和构造方法。
+> - 枚举构造方法访问修饰符只能是 `private` 或 `默认(无修饰符)`
