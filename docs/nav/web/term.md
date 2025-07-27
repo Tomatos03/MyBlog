@@ -222,3 +222,22 @@ CAS 操作是原子的，不会被其他线程中断，因此可以实现无锁�
 ### 强一致性
 强一致性（Strong Consistency）指的是系统在**每次写操作完成后，所有后续的读操作都能立即读取到最新写入的数据。**
 也就是说，系统中的所有节点、线程或副本在任何时刻都能看到同样的数据状态，**不会出现读到旧数据或不同步数据的情况**。
+
+
+## SQL
+SQL（Structured Query Language）是一种用于管理关系型数据库的标准查询语言。
+
+### DDL
+DDL（Data Definition Language） 数据定义语言，用于定义数据库结构和模式。
+
+### DML
+DML（Data Manipulation Language） 数据操作语言，用于对数据库中的数据进行查询
+
+### DQL
+DQL（Data Query Language） 数据查询语言，用于从数据库中检索数据。
+
+### DCL
+DCL（Data Control Language） 数据控制语言，用于控制对数据库的访问权限。
+
+### TCL
+TCL（Transaction Control Language） 事务控制语言，用于管理数据库事务。
