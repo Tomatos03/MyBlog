@@ -1,104 +1,96 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { fileOrDirNameMap, order, excludeFiles } from '../../nav/meta.json';
+import { file_or_dir_name_map, order, exclude_files } from '../../nav/meta.json';
 
-interface NavItem0 {
-    text: string;
-    link: string;
-}
 
-interface NavItem1 {
-    text: string;
-    items: NavItem[];
-}
+type NavItem = 
+    | { text: string; link: string; items?: never }           
+    | { text: string; link?: never; items: NavItem[] }; 
 
-type NavItem = NavItem0 | NavItem1;
-type Stats = fs.Stats;
+function generateNavItem(dir_path: string): NavItem[] {
+    // 读取dir_pathx下的文件或目录, files_and_dirs 输出示例:
+    // [about.md,assets,design-pattern,env-config,framework]
+    // 其中about.md是文件其他都是目录
+    const files_and_dir: string[] = fs.readdirSync(dir_path); // 阻塞式读取, 读取完成后才执行后面的代码
+    const nav_items: NavItem[] = [];
 
-function generateNavItem(directoryPath: string): NavItem[] {
-    const filesAndDirs: string[] = fs.readdirSync(directoryPath);
-    const navItems: NavItem[] = [];
+    files_and_dir.forEach((file_or_dir: string) => {
+        const fullPath: string = path.join(dir_path, file_or_dir);
+        const stats: fs.Stats = fs.statSync(fullPath);
 
-    filesAndDirs.forEach((fileOrDir: string) => {
-        const fullPath: string = path.join(directoryPath, fileOrDir);
-        const stat: Stats = fs.statSync(fullPath);
-
-        if (excludeFiles.includes(fileOrDir)) {
+        // 如果是排除的文件, 则跳过
+        if (exclude_files.includes(file_or_dir)) {
             return;
         }
 
-        if (stat.isFile() && fileOrDir.endsWith('.md')) {
-            navItems.push({
-                text: fileOrDir.replace('.md', ''),
-                link: fullPath.replace(/^docs[\\/]/, ''),
-            });
-        } else if (stat.isDirectory()) {
-            const newPath = path.join(directoryPath, fileOrDir);
-            navItems.push({
-                text: fileOrDir,
-                items: generateNavItem(newPath),
-            });
+        if (stats.isFile() && file_or_dir.endsWith('.md')) {
+            const file_name = file_or_dir.replace('.md', '');
+            nav_items.push(
+                {
+                    text: file_name,
+                    link: fullPath.replace(/^docs[\\/]/, ''),
+                }
+            );
+        } else if (stats.isDirectory()) {
+            const new_path = path.join(dir_path, file_or_dir);
+            nav_items.push(
+                {
+                    text: file_or_dir,
+                    items: generateNavItem(new_path),
+                }
+            );
         }
     });
-    return navItems;
+    return nav_items;
 }
 
-function mapFileOrDirName(navItem: NavItem[]): void {
-    navItem.forEach((item) => {
-        if (item.text in fileOrDirNameMap) {
-            item.text = fileOrDirNameMap[item.text];
-        }
+function mapNavItemsName(nav_items: NavItem[]): void {
+    nav_items.forEach((item) => {
+        if (item.text in file_or_dir_name_map) 
+            item.text = file_or_dir_name_map[item.text];
 
-        if ('items' in item) {
-            mapFileOrDirName(item.items);
-        }
+        if (item.items) 
+            mapNavItemsName(item.items);
     });
 }
 
-interface OrderItem {
-    name: string;
-    order: string[];
-}
-type OrderArray = (string | OrderItem)[];
+// 排序项类型, 可为字符串或包含名称和排序数组的对象
+type SortItem = string | { name: string; order: string[] };
 
-function getOrder(item: string, orderArr: OrderArray): number {
-    const DEFAULT_ORDER: number = orderArr.length;
-    for (let i = 0; i < orderArr.length; i++) {
-        const orderItem = orderArr[i];
-        if (typeof orderItem === 'string') {
-            if (item === orderItem) {
+function getOrderIndex(item_name: string): number {
+    for (let i = 0; i < order.length; i++) {
+        const sort_item: SortItem = order[i];
+
+        if (typeof sort_item === 'string') {
+            if (item_name === sort_item) 
                 return i;
-            }
-        } else if (orderItem.name === item) {
+        } else if (sort_item.name === item_name)
             return i;
-        }
     }
-    return DEFAULT_ORDER;
+
+    return order.length; // 如果没有找到, 返回最大值, 使其排在最后
 }
 
-function isNavitem1(item: NavItem): boolean {
-    return 'items' in item;
-}
-
-function sortNavItemsByFileName(navItems: NavItem[], orderArr: OrderArray): void {
-    navItems.sort((a: NavItem, b: NavItem) => {
-        return getOrder(a.text, orderArr) - getOrder(b.text, orderArr);
+function sortNavItems(nav_items: NavItem[]): void {
+    nav_items.sort((a: NavItem, b: NavItem) => {
+        return getOrderIndex(a.text) - getOrderIndex(b.text);
     });
-    for (let navItem of navItems) {
-        if (isNavitem1(navItem)) {
-            navItem = navItem as NavItem1;
-            sortNavItemsByFileName(navItem.items, orderArr);
-        }
+
+    for (let item of nav_items) {
+        if (item.items) 
+            sortNavItems(item.items);
     }
 }
 
-export default function autoGenerateNavItems(navDirectoryPath: string): NavItem[] {
-    const targetDirectory: string = path.join('docs', navDirectoryPath);
+function autoGenerateNavItems(navDirectoryRootPath: string): NavItem[] { 
+    navDirectoryRootPath = path.join('docs/', navDirectoryRootPath);
+    const navItems: NavItem[] = generateNavItem(navDirectoryRootPath);
 
-    const navItems: NavItem[] = generateNavItem(targetDirectory);
+    // 排序必须在名称映射之前, 进行名称映射之后会丢失原有名称
+    sortNavItems(navItems);
+    mapNavItemsName(navItems); 
 
-    sortNavItemsByFileName(navItems, order); // Sort the nav items
-
-    mapFileOrDirName(navItems); // Map file or dir names to their corresponding values
     return navItems;
 }
+
+export default autoGenerateNavItems;

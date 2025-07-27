@@ -1,5 +1,5 @@
 {
-    "fileOrDirNameMap": {
+    "file_or_dir_name_map": {
         "about": "关于",
         "os": "操作系统",
         "env-config": "环境配置",
@@ -34,5 +34,5 @@
         "web-security",
         "about"
     ],
-    "excludeFiles": ["assets"]
+    "exclude_files": ["assets"]
 }
