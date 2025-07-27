@@ -25,46 +25,6 @@ export default defineConfig({
             label: '大纲',
         },
         nav: autoGenerateNavItems('nav'),
-        // sidebar: {
-        //     'nav/env-config/': [
-        //         {
-        //             text: '环境配置',
-        //             items: [
-        //                 {
-        //                     text: '开发环境',
-        //                     items: [
-        //                         {
-        //                             text: 'Node.js',
-        //                             link: '/nav/env-config/dev/nodejs',
-        //                         },
-        //                         {
-        //                             text: 'MySQL',
-        //                             link: '/nav/env-config/dev/mysql',
-        //                         },
-        //                         {
-        //                             text: 'Redis',
-        //                             link: '/nav/env-config/dev/redis',
-        //                         },
-        //                     ],
-        //                 },
-        //                 {
-        //                     text: '部署环境',
-        //                     items: [],
-        //                 },
-        //                 {
-        //                     text: '工具',
-        //                     items: [
-        //                         {
-        //                             text: 'VS Code',
-        //                             link: '/nav/env-config/tools/vscode',
-        //                         },
-        //                         { text: 'Git', link: '/nav/env-config/tools/git' },
-        //                     ],
-        //                 },
-        //             ],
-        //         },
-        //     ],
-        // },
         docFooter: {
             prev: '上一页',
             next: '下一页',
