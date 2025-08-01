@@ -826,6 +826,44 @@ public void foo() {}
 public void bar() {}
 ```
 
+### 组合注解
+
+组合注解（Meta-Annotation Composition）是指通过自定义注解，并在其上应用其他注解，从而将多个注解的功能组合在一起。这样可以简化注解的使用，提高代码的可读性和可维护性。
+
+Spring 中的 `@RestController` 就是一个组合注解，它本身被 `@Controller` 和 `@ResponseBody` 注解所修饰：
+
+```java
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Controller
+@ResponseBody
+public @interface RestController {
+    String value() default "";
+}
+```
+
+使用 `@RestController` 注解的类，实际上同时具备了 `@Controller` 和 `@ResponseBody` 的功能。
+
+#### 自定义组合注解
+
+你也可以自定义组合注解，将常用的注解组合在一起：
+
+```java
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@MyAnnotation
+@Deprecated
+public @interface MyCombinedAnnotation {
+    String value();
+}
+```
+
+这样在使用 `@MyCombinedAnnotation` 时，就相当于同时使用了 `@MyAnnotation` 和 `@Deprecated`。
+
+> [!TIP]
+> 组合注解可以减少重复注解，提高开发效率，常用于框架设计和规范约定。
+
 ### 常见内置注解
 
 -   `@Override`：用于标记方法是重写父类方法，编译器会检查方法签名是否正确。
