@@ -1013,7 +1013,6 @@ mvn clean package
 > [!TIP]
 > 无论是深拷贝还是浅拷贝都会创建一个新对象
 
-#### 示例代码
 
 ```java
 class Person implements Cloneable {
@@ -1049,7 +1048,7 @@ class Address implements Cloneable {
 }
 ```
 
-#### 对比总结
+**总结**
 
 | 特性     | 浅拷贝                       | 深拷贝                       |
 | -------- | ---------------------------- | ---------------------------- |
