@@ -49,7 +49,7 @@ git config --global --get user.email
 
 当需要撤销修改或者切换到特定版本时，可以使用 Git 的重置功能。
 
-#### 撤销工作区修改
+#### 丢弃工作区修改
 
 丢弃工作目录中的文件的修改 （恢复到最后一次提交的状态）
 
@@ -61,19 +61,35 @@ git checkout -- <file-name>
 git restore <file-name>
 ```
 
-#### 撤销暂存区的文件
-
-不会丢失更改，只是撤销暂存状态
+#### 丢弃暂存区的暂存
 
 ```git
-# 将暂存区的修改撤销到工作区
+# 丢弃文件在暂存区的暂存, 不影响文件在工作区变更内容
 git reset HEAD <file-name>
 
 # git 2.23+ 新命令
 git restore --staged <file-name>
 ```
 
-#### 重置提交
+#### 丢弃远程仓库的文件
+
+```git
+# 丢弃远程仓库的文件, 并将文件添加到暂存区
+git rm <file-name>
+
+# 如果不想将文件添加到暂存区, 可以使用 --cached 参数
+# 文件仍然保留在工作区
+# 与Linux的rm <file-name> 类似, 只是这个命令仍保留文件在工作区
+git rm --cached <file-name>
+```
+
+#### 重置到指定提交点
+
+| 模式   | 命令示例                                              | 工作区变更 | 暂存区暂存 | 提交历史变更 |
+| ------ | ----------------------------------------------------- | ---------- | ---------- | ------------ |
+| soft   | `git reset --soft <hash>`                             | 保留       | 保留       | 回退         |
+| mixed  | `git reset --mixed <hash>`<br>`git reset <hash>`      | 保留       | 清除       | 回退         |
+| hard   | `git reset --hard <hash>`                             | 清除       | 清除       | 回退         |
 
 ```git
 # 软重置 - 保留工作区和暂存区的更改
@@ -85,17 +101,21 @@ git reset --mixed <commit-hash>
 
 # 硬重置 - 丢弃所有更改，完全回到指定提交
 git reset --hard <commit-hash>
-```
 
-#### 重置到前 N 个版本
-
-```git
-# 回退到前一个版本
+# 从最新的提交点开始, 回退到前一个版本
 git reset --hard HEAD^
+# 某些shell环境下不能够直接书写^, 需要''包裹
+git reset --hard 'HEAD^'
 
-# 回退到前N个版本
+# 从最新的提交点开始, 回退到前N个版本
 git reset --hard HEAD~N
 ```
+
+
+#### 撤销重置
+
+1. 使用 `git reflog` 找到重置前的提交哈希值
+2. 使用 `git reset --hard <commit-hash>` 恢复到该提交
 
 ### 本地仓库
 
@@ -120,18 +140,9 @@ git add .
 git add <dir-name>
 ```
 
-#### 删除暂存区之中的文件
+#### 缓存暂存区和工作区的内容
 
-```git
-# 删除暂存区中的文件,并将其从工作区删除
-git rm <file-name>
-# 删除暂存区中的文件,但保留工作区中的文件
-git rm --cached <file-name>
-```
-
-#### 将暂存区的内容缓存
-
-有时需要临时保存当前暂存区和工作区的更改，可以使用 `git stash` 命令。
+在某些操作前, 需要确保暂存区内容是空, 这个时候可以使用 `git stash` 命令, 将暂存区和工作区的文件缓存, 等操作完成后再恢复
 
 > [!NOTE]
 > 缓存并不属于某个分支, 每一个分支都能够查看到存储的缓存
