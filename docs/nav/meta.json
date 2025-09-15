@@ -5,12 +5,11 @@
         "env-config": "环境配置",
         "design-pattern": "设计模式",
         "framework": "框架",
-        "protocol": "协议",
         "tools": "工具",
         "dev": "开发环境",
         "deploy": "环境部署",
         "languages": "编程语言",
-        "term": "术语",
+        "term": "编程术语",
         "project-solution": "常见项目方案",
         "design-diagram": "设计图",
         "web-security": "网络安全"
@@ -25,10 +24,7 @@
             "name": "env-config",
             "order": ["tools", "dev", "deploy"]
         },
-        {
-            "name": "web",
-            "order": ["term", "protocol"]
-        },
+        "term",
         "languages",
         "project-solution",
         "web-security",
