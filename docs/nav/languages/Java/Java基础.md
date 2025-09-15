@@ -953,9 +953,11 @@ public class Main {
 
 ## Java Jar 包
 
-### 利用 Jar 生成 Jar 包
+**JAR（Java ARchive）包**是一种用于打包 Java 类、资源文件（如图片、配置文件等）和元数据（如清单文件）的压缩文件格式。它本质上是一个 ZIP 文件，但专门用于 Java 项目。
 
-利用 JDK 自带的 `jar` 命令可以将编译后的 `.class` 文件打包成 `.jar` 文件。
+### Jar 生成 Jar 包
+
+利用 JDK 自带的 `jar` 命令行工具可以将编译后的 `.class` 文件打包成 `.jar` 文件。
 
 在项目根目录执行:
 
