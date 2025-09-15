@@ -1,12 +1,24 @@
 import { defineConfig } from 'vitepress';
 import autoGenerateNavItems from './utils/generateNav';
+import { MermaidMarkdown, MermaidPlugin } from 'vitepress-plugin-mermaid';
 
-// https://vitepress.dev/reference/site-config
 export default defineConfig({
     markdown: {
         theme: {
             light: 'catppuccin-latte',
             dark: 'catppuccin-macchiato',
+        },
+        config(md) {
+            md.use(MermaidMarkdown);
+        },
+    },
+    vite: {
+        plugins: [MermaidPlugin()],
+        optimizeDeps: {
+            include: ['mermaid'],
+        },
+        ssr: {
+            noExternal: ['mermaid'],
         },
     },
     lang: 'zh-cn',
