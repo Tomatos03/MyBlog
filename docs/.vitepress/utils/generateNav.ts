@@ -90,6 +90,7 @@ function autoGenerateNavItems(navDirectoryRootPath: string): NavItem[] {
     sortNavItems(navItems);
     mapNavItemsName(navItems); 
 
+    // console.log(JSON.stringify(navItems, null, 2));
     return navItems;
 }
 

@@ -1,6 +1,6 @@
-# Vscode
+# VSCode
 
-## 编辑器设置
+## 配置
 
 <details>
 <summary>点击展开查看设置</summary>
@@ -98,17 +98,10 @@
 
 ## 插件
 
-### 外观主题相关
-
-|                                                 插件名称                                                  | 功能描述               |
-| :-------------------------------------------------------------------------------------------------------: | ---------------------- |
-|  [Catppuccin for VSCode](https://marketplace.visualstudio.com/items?itemName=Catppuccin.catppuccin-vsc)   | 温暖的、柔和的主题     |
-| [A-file-icon-vscode](https://marketplace.visualstudio.com/items?itemName=atommaterial.a-file-icon-vscode) | 文件图标和产品图标主题 |
-
-### 功能增强类
-
 |                                                                  插件名称                                                                   | 功能描述                         |
 | :-----------------------------------------------------------------------------------------------------------------------------------------: | -------------------------------- |
+|                   [Catppuccin for VSCode](https://marketplace.visualstudio.com/items?itemName=Catppuccin.catppuccin-vsc)                    | 温暖的、柔和的主题               |
+|                  [A-file-icon-vscode](https://marketplace.visualstudio.com/items?itemName=atommaterial.a-file-icon-vscode)                  | 文件图标和产品图标主题           |
 |                           [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)                            | 代码格式化工具                   |
 |                               [C/C++](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools)                               | C/C++ 语言支持、调试和代码格式化 |
 | [Competitive Programming Helper (CPH)](https://marketplace.visualstudio.com/items?itemName=DivyanshuAgrawal.competitive-programming-helper) | 拉取算法网站问题描述和测试案例   |
