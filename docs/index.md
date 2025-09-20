@@ -5,11 +5,11 @@ layout: home
 hero:
     name: 'Tomatos 的博客'
     text: 'Welcome'
-    tagline: '这是一个个人博客'
+    tagline: '个人博客'
     actions:
         - theme: brand
           text: 开始
-          link: /nav/os/Linux
+          link: nav/os/Windows/windows-skill.html
         - theme: alt
           text: GitHub
           link: https://github.com/Tomatos03
