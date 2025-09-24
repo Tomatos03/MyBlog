@@ -196,20 +196,31 @@ export default defineConfig({
             ],
             '/nav/design-pattern/': [
                 {
-                    text: '设计模式',
-                    collapsed: false,
-                    items: [
-                        { text: '建造者模式', link: '/nav/design-pattern/builder.md' },
-                        { text: '单例模式', link: '/nav/design-pattern/singleton.md' },
-                        // { text: '工厂模式', link: '/nav/design-pattern/factory.md' },
-                        // { text: '代理模式', link: '/nav/design-pattern/proxy.md' },
-                        // { text: '观察者模式', link: '/nav/design-pattern/observer.md' },
-                        // { text: '策略模式', link: '/nav/design-pattern/strategy.md' },
-                        // { text: '模板方法模式', link: '/nav/design-pattern/template-method.md' },
-                        // { text: '适配器模式', link: '/nav/design-pattern/adapter.md' },
-                        // { text: '装饰器模式', link: '/nav/design-pattern/decorator.md' }
-                    ],
+                  text: '设计模式',
+                  collapsed: false,
+                  items: [
+                    { text: '建造者模式', link: '/nav/design-pattern/builder.md' },
+                    { text: '单例模式', link: '/nav/design-pattern/singleton.md' },
+                    // { text: '工厂模式', link: '/nav/design-pattern/factory.md' },
+                    // { text: '代理模式', link: '/nav/design-pattern/proxy.md' },
+                    // { text: '观察者模式', link: '/nav/design-pattern/observer.md' },
+                    // { text: '策略模式', link: '/nav/design-pattern/strategy.md' },
+                    // { text: '模板方法模式', link: '/nav/design-pattern/template-method.md' },
+                    // { text: '适配器模式', link: '/nav/design-pattern/adapter.md' },
+                    // { text: '装饰器模式', link: '/nav/design-pattern/decorator.md' }
+                  ],
                 },
+                {
+                  text: '多线程设计模式',
+                  collapsed: false,
+                  items: [
+                    { text: '顺序控制', link: '/nav/design-pattern/thread/sequencing-control.md' },
+                    { text: '犹豫模式', link: '/nav/design-pattern/thread/balking-pattern.md' },
+                    { text: '单例模式', link: '/nav/design-pattern/thread/singleton-pattern.md' },
+                    { text: '保护性暂停', link: '/nav/design-pattern/thread/guarded-suspension.md' },
+                    { text: '两阶段终止', link: '/nav/design-pattern/thread/two-phase-termination.md' },
+                  ],
+                }
             ],
             '/nav/fundamentals/protocol/': [
                 {
@@ -266,7 +277,7 @@ export default defineConfig({
                     collapsed: false,
                     items: [
                         { text: 'Java多线程', link: '/nav/languages/Java/java-multithreading.md' },
-                        { text: 'Java JUC', link: '/nav/languages/Java/java-juc.md' }, 
+                        { text: 'Java JUC', link: '/nav/languages/Java/java-juc.md' },
                         { text: 'Java内存结构', link: '/nav/languages/Java/java-memoery-struct.md' },
                         { text: 'Java泛型', link: '/nav/languages/Java/java-generics.md' },
                         { text: 'Java注解', link: '/nav/languages/Java/java-annotation.md' },
