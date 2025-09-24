@@ -1,4 +1,3 @@
-import { text } from 'stream/consumers';
 import { defineConfig } from 'vitepress';
 // import autoGenerateNavItems from './utils/generateNav';
 import { MermaidMarkdown, MermaidPlugin } from 'vitepress-plugin-mermaid';
