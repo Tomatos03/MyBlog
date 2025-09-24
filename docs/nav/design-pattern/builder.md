@@ -2,9 +2,10 @@
 
 ## 优点
 
--   不需要知道参数顺序, 参数设置顺序可以任意组合
--   可读性高, 代码清晰
--   可扩展性强, 可以添加新的参数
+- 不需要知道参数顺序, 参数设置顺序可以任意组合
+- 需要新增参数时，只需在 Builder 类中添加对应方法即可，不影响已有代码，符合开闭原择(OCP)
+- 链式调用
+- 可以在 build() 方法中统一做参数校验，避免对象处于非法状态
 
 ## 实现
 
@@ -54,8 +55,8 @@ public class User {
 
 ```java
     User user = User.builder()
-            .setName("John")
-            .setAge(30)
-            .setAddress("123 Main St")
-            .build();
+                    .setName("John")
+                    .setAge(30)
+                    .setAddress("123 Main St")
+                    .build();
 ```
