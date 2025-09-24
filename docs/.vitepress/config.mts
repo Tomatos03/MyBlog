@@ -267,6 +267,8 @@ export default defineConfig({
                     collapsed: false,
                     items: [
                         { text: 'Java多线程', link: '/nav/languages/Java/java-multithreading.md' },
+                        { text: 'Java JUC', link: '/nav/languages/Java/java-juc.md' }, 
+                        { text: 'Java内存结构', link: '/nav/languages/Java/java-memoery-struct.md' },
                         { text: 'Java泛型', link: '/nav/languages/Java/java-generics.md' },
                         { text: 'Java注解', link: '/nav/languages/Java/java-annotation.md' },
                         {
