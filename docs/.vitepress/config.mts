@@ -52,7 +52,7 @@ export default defineConfig({
             },
             {
                 text: '设计图',
-                link: 'nav/design-pattern/design-diagram.md',
+                link: 'nav/design-diagram.md',
             },
             {
                 text: '设计模式',
@@ -217,6 +217,7 @@ export default defineConfig({
                     { text: '顺序控制', link: '/nav/design-pattern/thread/sequencing-control.md' },
                     { text: '犹豫模式', link: '/nav/design-pattern/thread/balking-pattern.md' },
                     { text: '单例模式', link: '/nav/design-pattern/thread/singleton-pattern.md' },
+                    { text: '生产者消费者模式', link: '/nav/design-pattern/thread/producer-consumer.md' },
                     { text: '保护性暂停', link: '/nav/design-pattern/thread/guarded-suspension.md' },
                     { text: '两阶段终止', link: '/nav/design-pattern/thread/two-phase-termination.md' },
                   ],
