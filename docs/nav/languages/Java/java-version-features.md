@@ -143,9 +143,9 @@ public interface Converter<F, T> {
 }
 ```
 
-#### 常用函数式接
+#### 常用函数式接口
 
-函数式接口只有一个抽象方法
+*只有一个抽象方法的接口被定义为***函数式接口**
 
 | 接口名              | 抽象方法签名          | 说明                     |
 | ------------------- | --------------------- | ------------------------ |
@@ -172,12 +172,115 @@ Lambda 表达式用于简化匿名内部类的写法，使代码更加简洁和�
 (参数列表) -> { 方法体 }
 ```
 
-> [!TIP]
->
-> -   参数类型可以省略，只有一个参数时小括号也可以省略。
-> -   方法体只有一条语句时，大括号和 `return` 可以省略。
+#### 省略规则
 
-#### 示例
+Lambda 表达式支持多种省略写法，让代码更加简洁：
+
+1. **参数类型省略**：编译器可以根据上下文推断参数类型。
+
+```java
+// 完整写法
+Function<String, Integer> func1 = (String s) -> s.length();
+
+// 省略参数类型
+Function<String, Integer> func2 = (s) -> s.length();
+```
+
+2. **单个参数时省略括号**：当只有一个参数时，可以省略参数列表的括号。
+
+```java
+// 带括号
+Function<String, Integer> func1 = (s) -> s.length();
+
+// 省略括号
+Function<String, Integer> func2 = s -> s.length();
+```
+
+3. **方法体只有一条语句时省略大括号**：当方法体只有一条语句时，可以省略大括号和 `return` 关键字。
+
+```java
+// 完整写法
+Function<Integer, Integer> func1 = (x) -> {
+    return x * 2;
+};
+
+// 省略大括号和 return
+Function<Integer, Integer> func2 = x -> x * 2;
+```
+
+4. **无参数时使用空括号**：没有参数时必须使用空括号 `()`。
+
+```java
+// 无参数 Lambda
+Supplier<String> supplier = () -> "Hello World";
+Runnable runnable = () -> System.out.println("Running");
+```
+
+5. **方法引用进一步简化**：当 Lambda 表达式只是调用某个方法时，可以使用方法引用。
+
+```java
+// Lambda 表达式
+Function<String, Integer> func1 = s -> s.length();
+Consumer<String> consumer1 = s -> System.out.println(s);
+
+// 方法引用（更简洁）
+Function<String, Integer> func2 = String::length;
+Consumer<String> consumer2 = System.out::println;
+```
+
+#### 注意事项
+
+使用 Lambda 表达式时需要注意以下几点：
+
+1. **变量捕获限制**：Lambda 表达式只能访问 `final` 或事实上为 `final` 的局部变量。
+
+```java
+int count = 0;
+// 编译错误：count 不是 final 或 effectively final
+// list.forEach(item -> count++);
+
+final int finalCount = 0;
+list.forEach(item -> System.out.println(finalCount)); // 正确
+```
+
+2. **this 引用**：在 Lambda 中，`this` 指向外部类实例，而不是 Lambda 本身。
+
+```java
+public class MyClass {
+    private String name = "MyClass";
+    
+    public void test() {
+        Runnable r = () -> System.out.println(this.name); // this 指向 MyClass
+    }
+}
+```
+
+3. **异常处理**：Lambda 中的受检异常需要在函数式接口中声明或在 Lambda 内部处理。
+
+```java
+// 需要处理异常
+list.forEach(item -> {
+    try {
+        // 可能抛出异常的代码
+        Thread.sleep(1000);
+    } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+    }
+});
+```
+
+4. **类型推断**：编译器会根据上下文推断参数类型，但复杂情况下可能需要显式声明。
+
+```java
+// 类型推断
+Function<String, Integer> func1 = s -> s.length();
+
+// 显式类型声明
+Function<String, Integer> func2 = (String s) -> s.length();
+```
+
+5. **性能考虑**：Lambda 表达式会产生额外的类文件，频繁创建可能影响性能。对于简单操作，传统方法可能更高效。
+
 
 ```java
 // 传统写法
