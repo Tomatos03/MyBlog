@@ -160,6 +160,7 @@ export default defineConfig({
                     collapsed: false,
                     items: [
                         { text: 'VSCode', link: '/nav/dev-tools/VSCode/vscode.md' },
+                        { text: 'Jmeter', link: '/nav/dev-tools/Jmeter/jmeter.md' },
                         { text: 'IDEA', link: '/nav/dev-tools/IDEA/idea.md' },
                         {
                             text: 'Git',
