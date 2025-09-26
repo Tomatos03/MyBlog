@@ -332,6 +332,14 @@ Monitor Lock 是 Java 中实现线程同步的基础。每个对象都有一个�
 > - **Recursion Count**: 记录当前线程重入 Monitor 的次数。
 > - **Wait Set**: 通过 `wait()` 方法进入等待状态的线程队列。(此时线程状态为 WAITING 或 TIMED_WAITING)
 
+### Lock Record
+
+当线程进入一个 `synchronized` 代码块或方法时，JVM会在**当前线程的栈帧**中分配一个 Lock Record用于记录锁相关的信息，比如对象头的原始值，以及当前线程是否持有锁
+
+- Lock Record 在线程尝试获取轻量锁和重量锁时才会创建, 如果线程获取偏向锁, 则不会创建 LockRecord
+
+- Lock Record 仅在当前线程的栈帧中存在, 当线程退出同步块或方法时, 该栈帧被弹出, Lock Record 也随之销毁
+
 ### 锁的优化与升级
 
 为了提升 `synchronized` 关键字实现的对象锁的性能，JVM 引入了锁的优化与升级机制，包括**偏向锁**、**轻量级锁**和**重量级锁**（也称为互斥锁或 Monitor 锁）。锁会根据竞争情况在不同状态之间升级或降级，以兼顾性能和线程安全。
