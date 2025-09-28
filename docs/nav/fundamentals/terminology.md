@@ -129,6 +129,7 @@ XSS（跨站脚本攻击，Cross-Site Scripting）是一种常见的 Web 安全�
 - 定期对网站进行安全检测，修复潜在的 XSS 漏洞。
 
 ## Cross-Origin Request
+
 跨域请求（Cross-Origin Request）是指浏览器中的 JavaScript 代码发起的请求 URL 与当前页面 URL 的**源**（Origin）不同。
 
 当以下任一条件不同时，浏览器认为这是一个跨域请求：
@@ -137,16 +138,30 @@ XSS（跨站脚本攻击，Cross-Site Scripting）是一种常见的 Web 安全�
 -   域名 or 主机（Domain or Host）：如 example.com 与 api.example.com
 -   端口（Port）：如 example.com:80 与 example.com:8080
 
-### 解决跨域问题的方法
+### 工作流程
 
-#### 添加反向代理服务器
+1. **浏览器发起跨域请求**  
+    - 对于简单请求（如GET），直接发请求。
+    - 对于复杂请求（如带自定义头、PUT/DELETE等），会先发一个OPTIONS预检请求。
 
-在开发环境中，可以通过配置反向代理来解决跨域问题。反向代理服务器会将请求转发到目标服务器，从而避免浏览器的同源策略限制。
+2. **后端返回CORS响应头**  
+    - 后端根据配置，在响应头中返回如 `access-control-allow-origin`、`access-control-allow-methods` 等字段。
 
-下面是一个Nginx的示例:
-1. 将静态资源放在 Nginx 的静态资源目录下。
-2. 浏览器访问反向代理服务器配置的地址, 如 `http://localhost:3000/api`(如果存在凭证,此时会携带)
-3. Nginx 将请求转发到目标服务器，如 `http://localhost:8080/api`
+3. **浏览器校验CORS响应头**  
+    - 浏览器会自动检查这些CORS头部字段，判断：
+      - `access-control-allow-origin` 是否包含当前前端页面的域名
+      - `access-control-allow-methods` 是否包含本次请求的方法
+      - `access-control-allow-headers` 是否包含本次请求的自定义头
+      - `access-control-allow-credentials` 是否允许携带cookie等凭证
+    - **如果全部符合规则，浏览器就会把响应内容交给前端JS代码。**
+    - **如果不符合，浏览器会拦截响应，前端JS拿不到数据，并在控制台报CORS错误。**
+
+
+> [!TIP]
+> 跨域请求产生的原因是浏览器的同源策略（Same-Origin Policy）限制了不同源之间的交互，以保护用户数据的安全。
+
+> [!NOTE]
+> 后端服务之间相互调用不受同源策略限制, 因为同源策略是浏览器的安全机制
 
 ## 多线程
 ### 并发
