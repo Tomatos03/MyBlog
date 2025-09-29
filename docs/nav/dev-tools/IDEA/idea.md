@@ -11,6 +11,55 @@
 > [!NOTE]
 > 这里配置的编码方式是IDEA 用来读取和保存文件时采用的字符编码方式, 如果需要打开的文件本身并不是当前指定的UTF-8编码, 那么打开这个文件可能会出现乱码
 
+## 配置 Web 项目
+
+1. 打开 File -> Project Structure -> Modules, 选择需要配置的模块, 添加 Web 框架
+
+![alt text](assets/image.png-1759131366352.png)
+
+2. 配置 Web 框架相关信息:  
+
+![alt text](assets/image.png-1759131734164.png)
+
+3. 配置 artifacts: 
+
+![alt text](assets/image.png-1759131789242.png)
+
+选择前面配置的 Web 模块, 点击 OK
+
+![alt text](assets/image.png-1759131860953.png)
+
+到这里, Web 项目就配置完成了
+
+这里讲解一下最后一步的两个输出表示什么意思:
+- compiled output: 编译输出的目录, 也就是 Java编译源代码文件后得到的.class 文件存放的目录
+- facet resources: 这个目录下存放的是 Web 项目相关的资源文件, 例如 web.xml, jsp 文件等
+
+参考下面运行项目后的输出:
+
+![alt text](assets/image.png-1759132162889.png)
+
+## 配置 Tomcat
+
+> [!NOTE]
+> 在开始配置 Tomcat 之前, 请确保下载了 [Tomcat](https://tomcat.apache.org/download-10.cgi), 并保证需要在 Tomcat 运行的 项目是 Web 项目
+
+1. 打开 File -> Settings -> Build, Execution, Deployment -> Application Servers, 添加一个 Tomcat 服务器:
+
+![alt text](assets/image.png-1759130559056.png)
+
+2. 打开 Run -> Edit Configurations, 添加一个 Tomcat Server -> Local, 按照下图进行配置:
+
+![alt text](assets/image.png-1759130771097.png)
+
+![alt text](assets/image.png-1759131038694.png)
+
+![alt text](assets/image.png-1759130817246.png)
+
+> [!TIP]
+> Application context 表示起始路径, 如果设置为/app, 那么所有的访问地址都基于 http://localhost:8080/app
+
+
 ## 配置本地Mavne
 
 IDEA 中内置了 Maven, 但是有时候我们需要使用自己本地的 Maven 可以按照如下步骤进行配置:
