@@ -51,11 +51,11 @@ git config --global --get user.email
 
 ### 排除规则
 
+-   `build/`：忽略所有名为 `build`的目录, 包括子目录中的 `build` 目录
+-   `build`：忽略所有名为 `build` 的文件和目录, 包括子目录中的 `build` 文件和目录
+-   `/build/`：忽略 `.gitignore` 所在目录下的 `build` 目录
 -   `*.log`：忽略所有以 `.log` 结尾的文件
--   `build/`：忽略所有名为 `build` 目录, 包括子目录之中的`build` 目录, 不忽略名为 `build` 的文件
--   `build`：与上一条规则基本一致, 但这规则会忽略名为 `build` 的文件
 -   `!important.log`：不忽略 `important.log` 文件, 统测搭配其他规则使用
--   `/build/`：只忽略项目根目录下的 `build` 文件夹, 不忽略子目录中的 `build` 文件夹
 
 > [!TIP]
 >  `git status --ignored ` 查看已经忽略的内容
