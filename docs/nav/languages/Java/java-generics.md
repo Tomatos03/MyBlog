@@ -21,6 +21,11 @@ public class Box<T> {
     }
 }
 
+// 子类继承时需要指定泛型类的具体类型
+public class StringBox extends Box<String> {
+    // ...
+}
+
 // 使用泛型类
 Box<String> stringBox = new Box<>();
 stringBox.setItem("Hello");
@@ -65,8 +70,54 @@ public void printList(List<?> list) {
 }
 ```
 
+## 桥接方法
+
+桥接方法是编译器为支持泛型而自动生成的方法，用于解决类型擦除带来的多态问题。
+
+```java
+public class Parent <T> {
+    T val;
+
+    public Parent(T val) {
+        this.val = val;
+    }
+
+    T get() {
+        return val;
+    }
+}
+
+class Child extends Parent<String> {
+    public Child(String val) {
+        super(val);
+    }
+
+    @Override
+    String get() {
+        return "child get method";
+    }
+}
+```
+javap:
+
+![alt text](assets/image.png-1760177484660.png)
+
+从图中可以看到Child类中有两个get方法，一个是桥接方法(返回值为Object)，一个是重写的方法(返回值为String)。
+
+> [!TIP]
+> 上面的get方法违反了方法重载规则, 但是Java编译器允许这种情况, 因为桥接方法是编译器自动生成的, 并不是程序员手写的
+
+```java
+// 桥接方法
+public Object get() {
+    return get();
+}
+```
+
 ## 泛型的局限性
 
 1. **类型擦除**：泛型在运行时会被擦除，导致类型信息不可用。
 2. **不能使用基本类型**：泛型不支持基本数据类型（如 `int`），需要使用包装类（如 `Integer`）。
 3. **不能创建泛型数组**：例如，`new T[10]` 是非法的。
+4. **不能实例化泛型类型**：例如，`new T()` 是非法的。
+5. **不能做类型推断**：`if (obj instanceof T)` 是非法的。
