@@ -302,6 +302,13 @@ export default defineConfig({
                         { text: 'Java Jar 包', link: '/nav/languages/Java/java-jar.md' },
                     ],
                 },
+                {
+                    text: 'Java工具链',
+                    collapsed: false,
+                    items: [
+                        { text: 'Maven', link: '/nav/languages/Java/tool-chains/maven.md' }, 
+                    ],
+                },
             ],
         },
 
