@@ -48,17 +48,18 @@
 
 ![alt text](assets/image.png-1759130559056.png)
 
-2. 打开 Run -> Edit Configurations, 添加一个 Tomcat Server -> Local, 按照下图进行配置:
+2. 打开 Run -> Edit Configurations, 添加一个 Tomcat Server -> Local(如果是远程Tomcat Server选择Remote), 按照下图进行配置:
 
-![alt text](assets/image.png-1759130771097.png)
+填写 Tomcat 相关配置信息:
+![alt text](assets/image.png-1760590887011.png)
 
+配置一个工件:
 ![alt text](assets/image.png-1759131038694.png)
 
 ![alt text](assets/image.png-1759130817246.png)
 
 > [!TIP]
-> Application context 表示起始路径, 如果设置为/app, 那么所有的访问地址都基于 http://localhost:8080/app
-
+> 如果Application context设置为/app, 那么所有的请求地址公共前缀为:`http://localhost:8080/app`
 
 ## 配置本地Mavne
 

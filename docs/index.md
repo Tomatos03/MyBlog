@@ -9,7 +9,7 @@ hero:
     actions:
         - theme: brand
           text: 开始
-          link: nav/os/Windows/windows-skill.html
+          link: nav/os/Windows/windows-skill.md
         - theme: alt
           text: GitHub
           link: https://github.com/Tomatos03
