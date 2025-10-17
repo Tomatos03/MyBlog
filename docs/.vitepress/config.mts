@@ -272,6 +272,7 @@ export default defineConfig({
                         { text: 'Java接口', link: '/nav/languages/Java/java-interface.md' },
                         { text: 'Java枚举', link: '/nav/languages/Java/java-enum.md' },
                         { text: 'Java方法', link: '/nav/languages/Java/java-methods.md' },
+                        { text: 'Java异常', link: '/nav/languages/Java/java-exception.md' },
                     ],
                 },
                 {
