@@ -140,10 +140,10 @@ export default defineConfig({
                     },
                 ],
             },
-            {
-                text: '常见项目方案',
-                link: 'nav/project-solution.md',
-            },
+            // {
+            //     text: '常见项目方案',
+            //     link: 'nav/project-solution.md',
+            // },
             {
                 text: '关于',
                 link: 'nav/about.md',
