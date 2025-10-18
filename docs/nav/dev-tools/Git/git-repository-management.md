@@ -103,6 +103,22 @@ git clone <remote-repo-url>
 git remote -v
 ```
 
+## 修改远程仓库地址
+
+```bash
+# 修改远程仓库地址
+git remote set-url <本地远程设置的仓库名> <new-remote-repo-url>
+
+# 例:
+git remote set-url origin https://github.com/Tomatos03/springboot-integration-demos.git
+
+# 本地远程设置的仓库可以用git remote -v查看
+# ❯ git remote -v
+# origin  https://github.com/Tomatos03/springboot-integration-demos.git (fetch)
+# origin  https://github.com/Tomatos03/springboot-integration-demos.git (push)
+# 这里的origin就是本地远程设置的仓库名, 后面是远程仓库地址
+```
+
 ## 关联远程仓库
 
 关联远程仓库后, 可以使用 `git push` 命令将本地和远程仓库的内容进行同步
